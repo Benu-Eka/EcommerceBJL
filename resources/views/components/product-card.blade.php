@@ -1,12 +1,12 @@
 @props([
-    'kodeBarang',
+    'kodeBarang' => null,
     'name',
     'price',
     'oldPrice' => null,
     'discount' => null,
     'image',
-    'productLink',
-    'variasi' => null, {{-- tambahan props variasi --}}
+    'productLink' => '#',  {{-- ✅ tambahkan default agar tidak undefined --}}
+    'variasi' => null,
 ])
 
 <a href="{{ $productLink }}" 

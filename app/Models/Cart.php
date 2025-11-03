@@ -11,13 +11,17 @@ class Cart extends Model
 
     protected $table = 'carts';
     protected $primaryKey = 'cart_id';
-    public $timestamps = true;
 
     protected $fillable = [
-        'user_id',
+        'pelanggan_id',
         'kode_barang',
         'jumlah',
     ];
+
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');
+    }
 
     public function barang()
     {

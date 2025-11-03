@@ -1,3 +1,11 @@
+@php
+    $pelangganId = auth('pelanggan')->id();
+    $cartTotal = 0;
+    if ($pelangganId) {
+        $cartTotal = \App\Models\Cart::where('pelanggan_id', $pelangganId)->count('jumlah');
+    }
+@endphp
+
 <header class="shadow-lg bg-red-800 sticky top-0 z-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">    
         {{-- Row Utama: Search | Logo/Brand | Ikon Navigasi --}}
@@ -33,16 +41,16 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                             d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.74 9.74 0 01-4-.84L3 20l1.28-3.84A8.94 8.94 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                     </svg>
-                    <span class="absolute top-0 right-0 block h-3 w-3 rounded-full ring-2 ring-red-700 bg-white text-red-700 text-xs text-center leading-3">2</span>
+                    <span class="absolute top-0 right-0 block h-3 w-3 rounded-full ring-2 ring-red-700 bg-white text-red-700 text-xs text-center leading-3">{{ $cartTotal ?? 0 }}</span>
                 </a>
 
                 {{-- Ikon Keranjang --}}
-                <a href="/chart" class="text-white hover:text-red-300 p-2 rounded-full transition duration-300 relative">
+                <a href="/cart" class="text-white hover:text-red-300 p-2 rounded-full transition duration-300 relative">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                     </svg>
-                    <span class="absolute top-0 right-0 block h-3 w-3 rounded-full ring-2 ring-red-700 bg-white text-red-700 text-xs text-center leading-3">3</span>
+                    <span class="absolute top-0 right-0 block h-3 w-3 rounded-full ring-2 ring-red-700 bg-white text-red-700 text-xs text-center leading-3">{{ $cartTotal ?? 0 }}</span>
                 </a>
 
                 {{-- Ikon Favorit --}}
