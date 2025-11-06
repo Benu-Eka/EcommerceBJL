@@ -35,23 +35,27 @@
                         </a>
                     </div>
                 @else
-                    <table class="w-full border-collapse text-sm">
+                    <table class="w-full border-collapse text-sm" id="cartTable">
                         <thead>
                             <tr class="text-left border-b text-gray-600">
                                 <th class="py-2 w-8"></th>
                                 <th class="py-2">Produk</th>
                                 <th class="py-2">Harga</th>
-                                <th class="py-2">Jumlah</th>
+                                <th class="py-2 text-center">Jumlah</th>
                                 <th class="py-2 text-right">Total</th>
                                 <th class="py-2 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($cartItems as $item)
-                            <tr class="border-b hover:bg-gray-50 transition">
+                            @php
+                                $itemTotal = $item->barang->harga_jual * $item->jumlah;
+                            @endphp
+                            <tr class="border-b hover:bg-gray-50 transition cart-row">
                                 {{-- Checkbox --}}
-                                <td class="py-3">
-                                    <input type="checkbox" class="accent-green-600 w-4 h-4" checked>
+                                <td class="py-3 text-center">
+                                    <input type="checkbox" class="cart-check accent-green-600 w-4 h-4" checked
+                                        data-total="{{ $itemTotal }}">
                                 </td>
 
                                 {{-- Detail Produk --}}
@@ -76,24 +80,24 @@
                                 </td>
 
                                 {{-- Jumlah --}}
-                                <td class="py-3">
+                                <td class="py-3 text-center">
                                     <form action="{{ route('cart.update', $item->cart_id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PUT')
-                                        <div class="flex items-center border rounded-md w-fit text-sm">
+                                        <div class="flex items-center justify-center border rounded-md w-fit text-sm mx-auto">
                                             <button type="submit" name="action" value="decrease"
-                                                class="px-2 text-gray-600 hover:text-green-600">-</button>
+                                                class="px-2 text-gray-600 hover:text-green-600 font-bold">−</button>
                                             <input type="number" name="jumlah" value="{{ $item->jumlah }}" min="1"
-                                                class="w-10 text-center border-x text-gray-700 focus:outline-none">
+                                                class="w-12 text-center border-x text-gray-700 font-semibold focus:outline-none">
                                             <button type="submit" name="action" value="increase"
-                                                class="px-2 text-gray-600 hover:text-green-600">+</button>
+                                                class="px-2 text-gray-600 hover:text-green-600 font-bold">+</button>
                                         </div>
                                     </form>
                                 </td>
 
                                 {{-- Total --}}
-                                <td class="py-3 text-right font-semibold text-gray-800 text-sm">
-                                    Rp {{ number_format($item->barang->harga_jual * $item->jumlah, 0, ',', '.') }}
+                                <td class="py-3 text-right font-semibold text-gray-800 text-sm item-total">
+                                    Rp {{ number_format($itemTotal, 0, ',', '.') }}
                                 </td>
 
                                 {{-- Aksi Hapus --}}
@@ -112,15 +116,30 @@
             </div>
 
             {{-- BAGIAN KANAN - RINGKASAN --}}
-            <div class="bg-white rounded-xl shadow p-4 h-fit text-sm">
+            <div class="bg-white rounded-xl shadow p-4 h-fit text-sm sticky top-4">
                 <h2 class="text-base font-semibold mb-3 text-gray-800">Ringkasan Belanja</h2>
-                <div class="flex justify-between text-gray-700 mb-3">
-                    <span>Total Harga</span>
-                    <span class="font-semibold">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+
+                <div class="space-y-2 text-gray-700">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span id="subtotal">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Diskon (10%)</span>
+                        <span class="text-green-600 font-semibold" id="discount">- Rp 0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>Biaya Penanganan</span>
+                        <span id="handling">Rp 5.000</span>
+                    </div>
+                    <hr class="my-2 border-gray-300">
+                    <div class="flex justify-between font-semibold text-gray-800 text-base">
+                        <span>Total Bayar</span>
+                        <span id="totalBayar">Rp {{ number_format($subtotal + 5000, 0, ',', '.') }}</span>
+                    </div>
                 </div>
 
-                <form action="{{ route('checkout') }}" method="POST">
-                    @csrf
+                <form action="{{ route('orders.checkout') }}">
                     <button type="submit"
                         class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition text-sm">
                         Checkout
@@ -132,4 +151,40 @@
 </div>
 
 <x-footer />
+
+{{-- SCRIPT UNTUK HITUNG TOTAL, DISKON, DAN PENANGANAN --}}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const checkboxes = document.querySelectorAll('.cart-check');
+    const subtotalElem = document.getElementById('subtotal');
+    const discountElem = document.getElementById('discount');
+    const totalElem = document.getElementById('totalBayar');
+
+    const HANDLING_FEE = 5000;
+    const DISCOUNT_RATE = 0.1; // 10%
+
+    function formatRupiah(angka) {
+        return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function updateTotal() {
+        let subtotal = 0;
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                subtotal += parseInt(cb.getAttribute('data-total'));
+            }
+        });
+
+        const discount = subtotal * DISCOUNT_RATE;
+        const totalBayar = subtotal - discount + HANDLING_FEE;
+
+        subtotalElem.textContent = formatRupiah(subtotal);
+        discountElem.textContent = '- ' + formatRupiah(discount);
+        totalElem.textContent = formatRupiah(totalBayar);
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+    updateTotal();
+});
+</script>
 @endsection

@@ -53,16 +53,4 @@
         </div>
     </div>
 
-    {{-- Filter Harga --}}
-    <div class="mb-6">
-        <h4 class="text-md font-semibold text-gray-800 mb-4 uppercase tracking-wider">Harga</h4>
-        
-        {{-- Range Slider Placeholder (Memerlukan JS untuk berfungsi dinamis) --}}
-        <div class="px-2">
-            <input type="range" min="0" max="200000" value="100000" class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer range-lg focus:outline-none">
-        </div>
-        
-        <p class="text-sm text-gray-500 mt-3">Rentang Harga: <span class="font-medium text-gray-800">Rp 0 - Rp 200.000</span></p>
-    </div>
-
 </div>

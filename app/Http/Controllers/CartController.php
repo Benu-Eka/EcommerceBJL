@@ -104,4 +104,36 @@ public function add(Request $request)
     return back()->with('success', 'Produk berhasil ditambahkan ke keranjang.');
 }
 
+public function destroy($id)
+{
+    $cartItem = Cart::find($id);
+
+    if (!$cartItem) {
+        return redirect()->back()->with('error', 'Produk tidak ditemukan di keranjang.');
+    }
+
+    $cartItem->delete();
+
+    return redirect()->back()->with('success', 'Produk berhasil dihapus dari keranjang.');
+}
+
+public function updateAll(Request $request)
+{
+    // Contoh logika update massal (nanti bisa disesuaikan)
+    // Misalnya menerima array data jumlah dari form
+    $items = $request->input('items', []);
+
+    foreach ($items as $id => $jumlah) {
+        $cartItem = Cart::find($id);
+        if ($cartItem) {
+            $cartItem->jumlah = $jumlah;
+            $cartItem->save();
+        }
+    }
+
+    return redirect()->back()->with('success', 'Keranjang berhasil diperbarui.');
+}
+
+
+
 }

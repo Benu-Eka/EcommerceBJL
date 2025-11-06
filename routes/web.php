@@ -72,3 +72,12 @@ Route::view('/chat', 'products.chat')->name('chat');
 Route::view('/riwayat', 'orders.riwayat')->name('riwayat');
 
 require __DIR__ . '/auth.php';
+
+
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout');
+Route::put('/cart/update-all', [CartController::class, 'updateAll'])->name('cart.updateAll');
+
+
+Route::get('/checkout', [OrderController::class, 'checkout'])->name('orders.checkout');

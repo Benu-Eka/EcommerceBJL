@@ -10,9 +10,9 @@
 
         {{-- Tombol Kembali --}}
         <div class="mb-6">
-            <a href="{{ url()->previous() }}" class="inline-flex items-center text-gray-600 hover:text-red-700 font-medium transition">
+            <a href="/product" class="inline-flex items-center text-gray-600 hover:text-red-700 font-medium transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor" stroke-width="2">
+                    stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 Kembali ke Produk
@@ -25,48 +25,91 @@
             {{-- Gambar Produk --}}
             <div class="w-full md:w-1/2 flex justify-center items-center">
                 <img src="{{ asset($product->foto_produk ?? 'images/no-image.png') }}" 
-                     alt="{{ $product->nama_barang }}" 
-                     class="w-full max-w-sm h-auto rounded-lg shadow-md object-cover border">
+                    alt="{{ $product->nama_barang }}" 
+                    class="w-full max-w-sm h-auto rounded-lg shadow-md object-cover border">
             </div>
 
             {{-- Detail Produk --}}
             <div class="w-full md:w-1/2">
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ $product->nama_barang }}</h1>
-                <p class="text-gray-500 text-sm mb-4">Kode Barang: {{ $product->kode_barang }}</p>
-                <p class="text-2xl font-extrabold text-red-700 mb-4">
+                <p class="text-gray-500 text-sm mb-4">Kode Barang: **{{ $product->kode_barang }}**</p>
+                <p class="text-2xl font-extrabold text-red-700 mb-4" id="product-price">
                     Rp {{ number_format($product->harga_jual, 0, ',', '.') }}
                 </p>
 
-                {{-- Info Tambahan --}}
-                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-4">
+                {{--- Pilihan Variasi Produk ---}}
+                @if(isset($product->variations) && $product->variations->count() > 0)
+                <div class="mb-4">
+                    <label for="product_variation" class="block text-sm font-semibold text-gray-700 mb-1">Pilih Variasi:</label>
+                    <select id="product_variation" name="variation_id" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm rounded-md shadow-sm">
+                        <option value="" selected disabled>-- Pilih Jenis Item --</option>
+                        @foreach($product->variations as $variation)
+                            <option 
+                                value="{{ $variation->id }}"
+                                data-price="{{ number_format($variation->harga, 0, ',', '.') }}"
+                                data-stok="{{ $variation->stok }}"
+                                {{ $variation->stok <= 0 ? 'disabled' : '' }}
+                            >
+                                {{ $variation->nama_variasi }} 
+                                (Rp {{ number_format($variation->harga, 0, ',', '.') }})
+                                @if($variation->stok <= 0) (Habis) @endif
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+
+                {{--- Info Tambahan ---}}
+                <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-6 border-b pb-4">
+                    
+                    {{-- STOK DIPERBAIKI (Diambil dari relasi StokBarang atau default 0) --}}
+                    @php
+                        // Memastikan variabel $currentStok didefinisikan dengan aman
+                        // Menggunakan isset() untuk menghindari error jika relasi 'stok' belum dimuat
+                        $currentStok = (isset($product->stok) && isset($product->stok->jumlah_stok)) 
+                                        ? $product->stok->jumlah_stok 
+                                        : 0;
+                    @endphp
+                    <div>
+                        <span class="font-semibold">Status Stok:</span> 
+                        <span id="stock-status" class="font-bold {{ $currentStok > 0 ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $currentStok > 0 ? 'Tersedia' : 'Habis' }}
+                        </span>
+                    </div>
+
+                    <div><span class="font-semibold">Satuan Dasar:</span> {{ $product->satuan ?? '-' }}</div>
                     <div><span class="font-semibold">Kategori:</span> {{ $product->kategori->nama_kategori ?? 'Umum' }}</div>
-                    <div><span class="font-semibold">Stok:</span> {{ $product->stok ?? 0 }}</div>
-                    <div><span class="font-semibold">Satuan:</span> {{ $product->satuan ?? '-' }}</div>
                     <div><span class="font-semibold">Tipe Harga:</span> {{ $product->tipe_harga_barang ?? '-' }}</div>
                 </div>
 
-                {{-- Deskripsi --}}
-                @if($product->keterangan)
-                    <p class="text-gray-600 leading-relaxed mb-6">{{ $product->keterangan }}</p>
-                @endif
+                {{-- Deskripsi Produk --}}
+                <div class="mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">Deskripsi Produk</h2>
+                    @if($product->keterangan)
+                        <p class="text-gray-600 leading-relaxed whitespace-pre-wrap">
+                            {{ $product->keterangan }}
+                        </p>
+                    @else
+                        <p class="text-gray-500 italic text-sm">Tidak ada deskripsi tersedia untuk produk ini.</p>
+                    @endif
+                </div>
 
                 {{-- Tombol Aksi --}}
                 <div class="flex flex-wrap gap-3">
                     {{-- Tambah ke Keranjang --}}
-                    <form action="{{ route('cart.add', $product->kode_barang) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow transition">
-                            + Tambah ke Keranjang
-                        </button>
-                    </form>
-
-                    {{-- Tambah ke Favorit --}}
-                    {{-- <form action="{{ route('favorite.toggle', $product->kode_barang) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="bg-red-100 hover:bg-red-200 text-red-700 font-semibold px-5 py-2 rounded-lg shadow transition">
-                            ❤️ Simpan ke Favorit
-                        </button>
-                    </form> --}}
+            <form action="{{ route('cart.add') }}" method="POST" class="mt-2" onClick="event.stopPropagation();">
+                @csrf
+                <input type="hidden" name="kode_barang" value="{{ $product->kode_barang }}">
+                <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded-lg shadow transition">
+                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" 
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    Tambah ke Keranjang
+                </button>
+            </form>
                 </div>
             </div>
         </div>
@@ -91,5 +134,67 @@
     </main>
 
     <x-footer />
+
+    {{-- Script JavaScript untuk menangani pilihan variasi --}}
+    @if(isset($product->variations) && $product->variations->count() > 0)
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectElement = document.getElementById('product_variation');
+            const priceElement = document.getElementById('product-price');
+            const stockStatusElement = document.getElementById('stock-status');
+            const variationIdInput = document.getElementById('selected_variation_id');
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+            // Simpan harga & status stok default (tanpa variasi)
+            const defaultPrice = priceElement.textContent;
+            const defaultStockText = stockStatusElement.textContent;
+            const defaultStockClass = stockStatusElement.className;
+
+            // Pastikan tombol nonaktif jika ada variasi yang harus dipilih
+            addToCartBtn.disabled = true;
+            addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            // Fungsi untuk mengupdate UI berdasarkan variasi yang dipilih
+            function updateProductDetails(selectedOption) {
+                if (selectedOption && selectedOption.value) {
+                    const price = selectedOption.getAttribute('data-price');
+                    const stock = parseInt(selectedOption.getAttribute('data-stok'));
+                    const variationId = selectedOption.value;
+
+                    // 1. Update Harga
+                    priceElement.textContent = `Rp ${price}`;
+
+                    // 2. Update Status Stok
+                    stockStatusElement.textContent = stock > 0 ? 'Tersedia' : 'Habis';
+                    stockStatusElement.className = stock > 0 ? 'font-bold text-green-600' : 'font-bold text-red-600';
+
+                    // 3. Update Input tersembunyi dan Tombol Keranjang
+                    variationIdInput.value = variationId;
+
+                    if (stock > 0) {
+                        addToCartBtn.disabled = false;
+                        addToCartBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        addToCartBtn.disabled = true;
+                        addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    }
+                } else {
+                    // Reset ke kondisi default/belum dipilih
+                    priceElement.textContent = defaultPrice;
+                    stockStatusElement.textContent = defaultStockText;
+                    stockStatusElement.className = defaultStockClass;
+                    variationIdInput.value = '';
+                    addToCartBtn.disabled = true;
+                    addToCartBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+
+            selectElement.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                updateProductDetails(selectedOption);
+            });
+        });
+    </script>
+    @endif
 </div>
 @endsection
