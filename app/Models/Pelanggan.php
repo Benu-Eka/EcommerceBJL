@@ -11,7 +11,6 @@ class Pelanggan extends Authenticatable
 
     protected $table = 'pelanggans';
     protected $primaryKey = 'pelanggan_id';
-    public $timestamps = true;
 
     protected $fillable = [
         'nama_pelanggan',
@@ -24,4 +23,9 @@ class Pelanggan extends Authenticatable
     ];
 
     protected $hidden = ['password', 'remember_token'];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'pelanggan_id');
+    }
 }
