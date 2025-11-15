@@ -59,6 +59,15 @@ Route::middleware('auth:pelanggan')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::match(['post', 'put'], '/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // CHECKOUT
+    Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout');
+    Route::put('/cart/update-all', [CartController::class, 'updateAll'])->name('cart.updateAll');
+
+    Route::get('/checkout', [OrderController::class, 'index'])->name('orders.checkout');
+    Route::post('/checkout', [OrderController::class, 'store'])->name('orders.store');
 });
 
 /*
@@ -74,10 +83,5 @@ Route::view('/riwayat', 'orders.riwayat')->name('riwayat');
 require __DIR__ . '/auth.php';
 
 
-Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
-Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout');
-Route::put('/cart/update-all', [CartController::class, 'updateAll'])->name('cart.updateAll');
-
-
-Route::get('/checkout', [OrderController::class, 'checkout'])->name('orders.checkout');
+Route::post('/checkout/process', [OrderController::class, 'process'])->name('checkout.process');
+Route::get('/transaksi', [OrderController::class, 'transaksi'])->name('orders.transaksi');

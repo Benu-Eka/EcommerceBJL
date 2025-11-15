@@ -32,7 +32,7 @@
             {{-- Detail Produk --}}
             <div class="w-full md:w-1/2">
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ $product->nama_barang }}</h1>
-                <p class="text-gray-500 text-sm mb-4">Kode Barang: **{{ $product->kode_barang }}**</p>
+                <p class="text-gray-500 text-sm mb-4">Kode Barang: {{ $product->kode_barang }}</p>
                 <p class="text-2xl font-extrabold text-red-700 mb-4" id="product-price">
                     Rp {{ number_format($product->harga_jual, 0, ',', '.') }}
                 </p>

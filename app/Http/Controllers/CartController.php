@@ -134,6 +134,23 @@ public function updateAll(Request $request)
     return redirect()->back()->with('success', 'Keranjang berhasil diperbarui.');
 }
 
+public function update(Request $request, $id)
+    {
+        $cart = Cart::findOrFail($id);
 
+        // Tentukan aksi yang dikirim dari form: increase / decrease
+        if ($request->input('action') === 'increase') {
+            $cart->jumlah += 1;
+        } elseif ($request->input('action') === 'decrease') {
+            $cart->jumlah = max(1, $cart->quantity - 1); // minimal 1
+        } elseif ($request->filled('jumlah')) {
+            // Jika user ubah manual lewat input number
+            $cart->jumlah = max(1, (int) $request->input('jumlah'));
+        }
+
+        $cart->save();
+
+        return back()->with('success', 'Jumlah produk diperbarui');
+    }
 
 }

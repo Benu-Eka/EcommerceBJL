@@ -16,7 +16,7 @@
             </svg>
             Kembali
         </a>
-        <h1 class="text-2xl font-bold text-gray-800 mt-3">Keranjang Belanja</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mt-3">Keranjang Belanja 00</h1>
     </div>
 
     <div class="max-w-6xl mx-auto">
@@ -87,7 +87,7 @@
                                         <div class="flex items-center justify-center border rounded-md w-fit text-sm mx-auto">
                                             <button type="submit" name="action" value="decrease"
                                                 class="px-2 text-gray-600 hover:text-green-600 font-bold">−</button>
-                                            <input type="number" name="jumlah" value="{{ $item->jumlah }}" min="1"
+                                            <input type="text" name="jumlah" value="{{ $item->jumlah }}" min="1"
                                                 class="w-12 text-center border-x text-gray-700 font-semibold focus:outline-none">
                                             <button type="submit" name="action" value="increase"
                                                 class="px-2 text-gray-600 hover:text-green-600 font-bold">+</button>
@@ -129,7 +129,7 @@
                         <span class="text-green-600 font-semibold" id="discount">- Rp 0</span>
                     </div>
                     <div class="flex justify-between">
-                        <span>Biaya Penanganan</span>
+                        <span>Biaya Pengiriman</span>
                         <span id="handling">Rp 5.000</span>
                     </div>
                     <hr class="my-2 border-gray-300">

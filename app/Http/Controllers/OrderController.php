@@ -1,22 +1,46 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use App\Models\SuratJalan;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
-    public function checkout()
+    public function index()
     {
-        // Ambil data dari session cart (jika ada)
-        $cart = Session::get('cart', []);
+        return view('orders.checkout');
+    }
 
-        // Perhitungan total
-        $subtotal = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
-        $handling = 5000; // biaya penanganan tetap
-        $discount = 0; // bisa dikembangkan nanti
-        $total = $subtotal + $handling - $discount;
+    public function store(Request $request)
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+        }
 
-        return view('orders.checkout', compact('cart', 'subtotal', 'handling', 'discount', 'total'));
+        $pelangganId = Auth::id(); 
+
+        $sj_id = 'SJ-' . now()->format('ymd') . '-' . strtoupper(substr(uniqid(), -5));
+        SuratJalan::create([
+            'sj_id'             => $sj_id,
+            'user_id'           => 'E-Commerce',
+            'pelanggan_id'      => Auth::id(),
+            'tanggal_surat'     => now(),
+            'status'            => 'Pending',
+            'biaya_pengiriman'  => 5000.00,
+            'diskon_pelanggan'  => 10.00,
+            'subtotal'          => 105000.00,
+        ]);
+
+        Log::info('Surat Jalan berhasil dibuat', [
+            'sj_id' => $sj_id,
+            'pelanggan_id' => Auth::id(),
+            'status' => 'Pending',
+        ]);
+        
+        return redirect()->route('orders.checkout')->with('success', "Surat Jalan berhasil dibuat! ID: {$sj_id}");
     }
 }

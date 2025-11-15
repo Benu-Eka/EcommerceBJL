@@ -92,4 +92,6 @@
         </main>
         <x-footer />
     </div>
+
+
 @endsection
