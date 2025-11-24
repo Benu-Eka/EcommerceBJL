@@ -7,11 +7,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\KategoriBarangController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PromoController;
+
 
 /*
 |--------------------------------------------------------------------------
-| AUTH PELANGGAN
+| ROUTE UNTUK PELANGGAN (Login & Register)
 |--------------------------------------------------------------------------
 */
 Route::get('/login-pelanggan', [PelangganAuthController::class, 'showLoginForm'])->name('pelanggan.login.form');
@@ -23,7 +24,7 @@ Route::post('/register-pelanggan', [PelangganAuthController::class, 'register'])
 
 /*
 |--------------------------------------------------------------------------
-| HALAMAN UTAMA
+| ROUTE UTAMA (Home & Kategori)
 |--------------------------------------------------------------------------
 */
 Route::get('/', [KategoriBarangController::class, 'index'])->name('kategori.index');
@@ -31,57 +32,49 @@ Route::get('/home', [KategoriBarangController::class, 'index'])->name('kategori.
 
 /*
 |--------------------------------------------------------------------------
-| PRODUK
+| ROUTE PRODUK (Daftar & Detail)
 |--------------------------------------------------------------------------
 */
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 Route::get('/product/{kode_barang}', [ProductController::class, 'show'])->name('product.detail');
+// Route::get('/product', [ProductController::class, 'index'])->name('product.index');
+
 
 /*
 |--------------------------------------------------------------------------
-| ROUTES WAJIB LOGIN
+| ROUTE YANG WAJIB LOGIN (auth:pelanggan)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:pelanggan')->group(function () {
 
-    /*
-    |-------------------------
-    | KERANJANG
-    |-------------------------
-    */
+    // CART
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
     Route::put('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/delete/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::put('/cart/update-all', [CartController::class, 'updateAll'])->name('cart.updateAll');
 
-    /*
-    |-------------------------
-    | CHECKOUT
-    |-------------------------
-    */
-    // Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');  // tampilkan halaman checkout
-    // Route::post('/checkout/pay', [CheckoutController::class, 'placeOrder'])->name('checkout.pay'); // proses midtrans
+    // CHECKOUT PAGE
+    Route::get('/checkout', [OrderController::class, 'index'])->name('orders.checkout');
 
-    /*
-    |-------------------------
-    | ORDER (RIWAYAT)
-    |-------------------------
-    */
-    Route::get('/pesanan', [OrderController::class, 'index'])->name('orders.index');
+    // SIMPAN SURAT JALAN
+    Route::post('/checkout/store', [OrderController::class, 'store'])->name('orders.store');
 
-    /*
-    |-------------------------
-    | PROFIL
-    |-------------------------
-    */
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::match(['post', 'put'], '/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    // PROSES PEMBAYARAN MIDTRANS
+    Route::post('/checkout/pay', [OrderController::class, 'pay'])->name('orders.pay');
+
+    // CALLBACK RESULT
+    Route::get('/orders/success', [OrderController::class, 'success'])->name('orders.success');
+    Route::get('/orders/pending', [OrderController::class, 'pending'])->name('orders.pending');
+    Route::get('/orders/failed', [OrderController::class, 'failed'])->name('orders.failed');
+
+    // HISTORY PESANAN
+    Route::get('/pesanan', [OrderController::class, 'riwayat'])->name('orders.index');
 });
 
 /*
 |--------------------------------------------------------------------------
-| STATIC PAGE
+| ROUTE TAMBAHAN (Static Page, Promo, dll)
 |--------------------------------------------------------------------------
 */
 Route::view('/promo', 'products.promo')->name('promo');
@@ -89,28 +82,12 @@ Route::view('/favorit', 'products.favorit')->name('favorit');
 Route::view('/chat', 'products.chat')->name('chat');
 Route::view('/riwayat', 'orders.riwayat')->name('riwayat');
 
-Route::middleware('auth:pelanggan')->group(function () {
-
-    Route::get('/checkout', [CheckoutController::class, 'showCheckout'])
-        ->name('orders.checkout');
-
-    Route::post('/checkout', [CheckoutController::class, 'placeOrder'])
-        ->name('orders.place');
-});
+require __DIR__ . '/auth.php';
 
 
-// Route::middleware('auth:pelanggan')->group(function () {
+Route::post('/checkout/process', [OrderController::class, 'process'])->name('checkout.process');
+Route::get('/transaksi', [OrderController::class, 'transaksi'])->name('orders.transaksi');
 
-//     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('checkout.show');
 
-//     Route::post('/checkout/place', [CheckoutController::class, 'placeOrder'])->name('checkout.place');
-// });
-
-// // Halaman Checkout (GET)
-// Route::get('/checkout', [CheckoutController::class, 'show'])->name('checkout.show');
-
-// // Proses Order + Midtrans (POST)
-// Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-
-// // Callback Midtrans
-Route::post('/midtrans/callback', [CheckoutController::class, 'callback'])->name('midtrans.callback');
+Route::get('/promo', [PromoController::class, 'index'])->name('promo.index');
+Route::post('/voucher/claim', [PromoController::class, 'claim'])->name('voucher.claim')->middleware('auth:pelanggan');

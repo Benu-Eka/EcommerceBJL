@@ -61,25 +61,44 @@
 
                 {{--- Info Tambahan ---}}
                 <div class="grid grid-cols-2 gap-2 text-sm text-gray-700 mb-6 border-b pb-4">
-                    
-                    {{-- STOK DIPERBAIKI (Diambil dari relasi StokBarang atau default 0) --}}
-                    @php
-                        // Memastikan variabel $currentStok didefinisikan dengan aman
-                        // Menggunakan isset() untuk menghindari error jika relasi 'stok' belum dimuat
-                        $currentStok = (isset($product->stok) && isset($product->stok->jumlah_stok)) 
-                                        ? $product->stok->jumlah_stok 
-                                        : 0;
+
+                    {{-- Stok --}}
+                    {{-- @php
+                        $stokAkhir = $product->stok->jumlah_stok ?? 0;
                     @endphp
                     <div>
-                        <span class="font-semibold">Status Stok:</span> 
-                        <span id="stock-status" class="font-bold {{ $currentStok > 0 ? 'text-green-600' : 'text-red-600' }}">
-                            {{ $currentStok > 0 ? 'Tersedia' : 'Habis' }}
+                        <span class="font-semibold">Stok:</span> 
+                        <span class="font-bold {{ $stokAkhir > 0 ? 'text-green-600' : 'text-red-600' }}">
+                            {{ $stokAkhir }} {{ $product->satuan_terkecil }}
                         </span>
+                    </div> --}}
+                    
+                     {{-- Jumlah barang per karton --}}
+                    <div>
+                        <span class="font-semibold">Stok :</span> 
+                        {{ $product->jml_barang_per_karton ?? 0 }} {{ $product->satuan_terkecil }}
                     </div>
 
-                    <div><span class="font-semibold">Satuan Dasar:</span> {{ $product->satuan ?? '-' }}</div>
-                    <div><span class="font-semibold">Kategori:</span> {{ $product->kategori->nama_kategori ?? 'Umum' }}</div>
-                    <div><span class="font-semibold">Tipe Harga:</span> {{ $product->tipe_harga_barang ?? '-' }}</div>
+                    {{-- Satuan dari DB: satuan_terkecil --}}
+                    <div>
+                        <span class="font-semibold">Satuan Jual:</span> 
+                        {{ $product->satuan_jual ?? '-' }}
+                    </div>
+
+                    {{-- Kategori dari FK kategori_barang --}}
+                    <div>
+                        <span class="font-semibold">Kategori Barang:</span> 
+                        {{ $product->kategori->nama_kategori ?? 'Tidak ada' }}
+                    </div>
+
+                    {{-- Tipe Harga (tipe_harga_barang) --}}
+                    <div>
+                        <span class="font-semibold">Tipe Harga Barang:</span> 
+                        {{ strtoupper($product->tipe_harga_barang) }}
+                    </div>
+
+
+
                 </div>
 
                 {{-- Deskripsi Produk --}}

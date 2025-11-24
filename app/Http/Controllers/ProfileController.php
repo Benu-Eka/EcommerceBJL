@@ -7,16 +7,19 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\Pelanggan;
+use App\Models\KategoriPelanggan;
 
 class ProfileController extends Controller
 {
 
     public function index()
     {
-        $pelanggan = Auth::guard('pelanggan')->user();
+        $pelanggan = Auth::guard('pelanggan')->user()
+                        ->load('kategoriPelanggan');
 
         return view('profile.index', compact('pelanggan'));
     }
+
 
     /**
      * Tampilkan form profil pelanggan.
@@ -31,45 +34,51 @@ class ProfileController extends Controller
             ]);
         }
 
-        return view('profile.form', compact('pelanggan'));
+        // Ambil semua kategori dari DB
+        $kategori = KategoriPelanggan::orderBy('kategori_pelanggan')->get();
+
+        return view('profile.form', compact('pelanggan', 'kategori'));
     }
 
     /**
      * Update informasi profil pelanggan.
      */
-    public function update(Request $request)
-    {
-        $pelanggan = Auth::guard('pelanggan')->user();
+        public function update(Request $request)
+        {
+            $pelanggan = Auth::guard('pelanggan')->user();
 
-        if (!$pelanggan) {
-            return redirect()->route('pelanggan.login.form')->withErrors([
-                'auth' => 'Silakan login terlebih dahulu.'
+            if (!$pelanggan) {
+                return redirect()->route('pelanggan.login.form')->withErrors([
+                    'auth' => 'Silakan login terlebih dahulu.'
+                ]);
+            }
+
+            $data = $request->validate([
+                'nama_pelanggan' => 'required|string|max:255',
+                'email' => 'required|email|unique:pelanggans,email,' . $pelanggan->pelanggan_id . ',pelanggan_id',
+                'alamat' => 'required|string',
+                'NPWP' => 'nullable|string|max:50',
+                'PIC' => 'required|string|max:100',
+                'kategori_pelanggan_id' => 'required|exists:kategori_pelanggans,kategori_pelanggan_id', // ← WAJIB
+                'password' => 'nullable|min:6|confirmed',
             ]);
+            
+
+            // Update password jika diisi
+            if (!empty($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            } else {
+                unset($data['password']);
+            }
+
+            // Update data pelanggan
+            $pelanggan->update($data);
+
+            return redirect()
+                ->route('profile.edit')
+                ->with('success', 'Profil berhasil diperbarui!');
         }
 
-        $data = $request->validate([
-            'nama_pelanggan' => 'required|string|max:255',
-            'email' => 'required|email|unique:pelanggans,email,' . $pelanggan->pelanggan_id . ',pelanggan_id',
-            'alamat' => 'required|string',
-            'NPWP' => 'nullable|string|max:50',
-            'PIC' => 'required|string|max:100',
-            'tipe_harga' => 'nullable|string|max:50',
-            'password' => 'nullable|min:6|confirmed',
-        ]);
-
-        // Update password jika diisi
-        if (!empty($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
-            unset($data['password']);
-        }
-
-        $pelanggan->update($data);
-
-        return redirect()
-            ->route('profile.edit')
-            ->with('success', 'Profil berhasil diperbarui!');
-    }
 
     /**
      * Hapus akun pelanggan.

@@ -28,4 +28,11 @@ class Pelanggan extends Authenticatable
     {
         return $this->hasMany(Order::class, 'pelanggan_id');
     }
+
+    public function kategoriPelanggan()
+    {
+        return $this->belongsTo(KategoriPelanggan::class, 'kategori_pelanggan_id', 'kategori_pelanggan_id');
+    }
+
+                                                                        
 }

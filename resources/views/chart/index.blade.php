@@ -16,13 +16,13 @@
             </svg>
             Kembali
         </a>
-        <h1 class="text-2xl font-bold text-gray-800 mt-3">Keranjang Belanja</h1>
+        <h1 class="text-2xl font-bold text-gray-800 mt-3">Keranjang Belanja 00</h1>
     </div>
 
     <div class="max-w-6xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-            {{-- BAGIAN KIRI - PRODUK DALAM KERANJANG --}}
+            {{-- BAGIAN KIRI - DAFTAR PRODUK --}}
             <div class="lg:col-span-2 bg-white rounded-xl shadow p-4">
                 @if($cartItems->isEmpty())
                     <div class="text-center py-10">
@@ -46,21 +46,16 @@
                                 <th class="py-2 text-right">Aksi</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             @foreach ($cartItems as $item)
                             @php
                                 $itemTotal = $item->barang->harga_jual * $item->jumlah;
                             @endphp
-
                             <tr class="border-b hover:bg-gray-50 transition cart-row">
-
-                                {{-- Checkbox memilih produk --}}
+                                {{-- Checkbox --}}
                                 <td class="py-3 text-center">
-                                    <input type="checkbox" 
-                                           class="cart-check accent-green-600 w-4 h-4" 
-                                           checked
-                                           data-total="{{ $itemTotal }}">
+                                    <input type="checkbox" class="cart-check accent-green-600 w-4 h-4" checked
+                                        data-total="{{ $itemTotal }}">
                                 </td>
 
                                 {{-- Detail Produk --}}
@@ -69,18 +64,18 @@
                                         <img src="{{ asset($item->barang->foto_produk ?? 'images/no-image.png') }}" 
                                             alt="{{ $item->barang->nama_barang }}" 
                                             class="w-12 h-12 object-cover rounded-md border">
-
                                         <div>
-                                            <p class="font-medium text-gray-800 text-sm">
+                                            <p class="font-medium text-gray-800 hover:text-green-700 cursor-pointer text-sm leading-tight">
                                                 {{ $item->barang->nama_barang }}
                                             </p>
-                                            <p class="text-xs text-gray-500 kode-barang">Kode: {{ $item->kode_barang }}</p>
+                                            <p class="text-xs text-gray-500">Kode: {{ $item->kode_barang }}</p>
+                                            <p class="text-xs text-gray-500">Kategori ID: {{ $item->barang->kategori_barang_id }}</p>
                                         </div>
                                     </div>
                                 </td>
 
                                 {{-- Harga --}}
-                                <td class="py-3 text-gray-700">
+                                <td class="py-3 text-gray-700 text-sm">
                                     Rp {{ number_format($item->barang->harga_jual, 0, ',', '.') }}
                                 </td>
 
@@ -89,24 +84,19 @@
                                     <form action="{{ route('cart.update', $item->cart_id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PUT')
-
                                         <div class="flex items-center justify-center border rounded-md w-fit text-sm mx-auto">
                                             <button type="submit" name="action" value="decrease"
                                                 class="px-2 text-gray-600 hover:text-green-600 font-bold">−</button>
-
-                                            <input type="text" name="jumlah" 
-                                                value="{{ $item->jumlah }}" min="1"
-                                                class="w-12 text-center border-x text-gray-700 font-semibold">
-
+                                            <input type="text" name="jumlah" value="{{ $item->jumlah }}" min="1"
+                                                class="w-12 text-center border-x text-gray-700 font-semibold focus:outline-none">
                                             <button type="submit" name="action" value="increase"
                                                 class="px-2 text-gray-600 hover:text-green-600 font-bold">+</button>
                                         </div>
                                     </form>
                                 </td>
 
-                                {{-- Total harga per item --}}
-                                <td class="py-3 text-right font-semibold text-gray-800 item-total"
-                                    data-price="{{ $item->barang->harga_jual }}">
+                                {{-- Total --}}
+                                <td class="py-3 text-right font-semibold text-gray-800 text-sm item-total">
                                     Rp {{ number_format($itemTotal, 0, ',', '.') }}
                                 </td>
 
@@ -118,7 +108,6 @@
                                         <button class="text-red-600 hover:text-red-800 text-sm">Hapus</button>
                                     </form>
                                 </td>
-
                             </tr>
                             @endforeach
                         </tbody>
@@ -135,32 +124,22 @@
                         <span>Subtotal</span>
                         <span id="subtotal">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </div>
-
                     <div class="flex justify-between">
                         <span>Diskon (10%)</span>
                         <span class="text-green-600 font-semibold" id="discount">- Rp 0</span>
                     </div>
-
                     <div class="flex justify-between">
                         <span>Biaya Pengiriman</span>
                         <span id="handling">Rp 5.000</span>
                     </div>
-
                     <hr class="my-2 border-gray-300">
-
                     <div class="flex justify-between font-semibold text-gray-800 text-base">
                         <span>Total Bayar</span>
                         <span id="totalBayar">Rp {{ number_format($subtotal + 5000, 0, ',', '.') }}</span>
                     </div>
                 </div>
 
-                {{-- FORM CHECKOUT MENGIRIM ITEM TERPILIH --}}
-                {{-- <form method="POST" action="{{ route('orders.checkout') }}" id="checkoutForm"> --}}
-                <form action="{{ route('checkout.show') }}">
-                    @csrf
-                    <input type="hidden" name="selected_items" id="selectedItemsInput">
-                    
-
+                <form action="{{ route('orders.checkout') }}">
                     <button type="submit"
                         class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition text-sm">
                         Checkout
@@ -173,25 +152,23 @@
 
 <x-footer />
 
-{{-- SCRIPT UNTUK MENGHITUNG TOTAL + MENGIRIM ITEM KE CHECKOUT --}}
+{{-- SCRIPT UNTUK HITUNG TOTAL, DISKON, DAN PENANGANAN --}}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
     const checkboxes = document.querySelectorAll('.cart-check');
     const subtotalElem = document.getElementById('subtotal');
     const discountElem = document.getElementById('discount');
     const totalElem = document.getElementById('totalBayar');
 
     const HANDLING_FEE = 5000;
-    const DISCOUNT_RATE = 0.10;
+    const DISCOUNT_RATE = 0.1; // 10%
 
     function formatRupiah(angka) {
-        return 'Rp ' + angka.toLocaleString('id-ID');
+        return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     function updateTotal() {
         let subtotal = 0;
-
         checkboxes.forEach(cb => {
             if (cb.checked) {
                 subtotal += parseInt(cb.getAttribute('data-total'));
@@ -208,35 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
     updateTotal();
-
-
-    // SIAPKAN ITEM TERPILIH UNTUK DIKIRIM KE CHECKOUT
-    const checkoutForm = document.getElementById('checkoutForm');
-    const selectedItemsInput = document.getElementById('selectedItemsInput');
-
-    checkoutForm.addEventListener('submit', function (e) {
-        let selectedItems = [];
-
-        document.querySelectorAll('.cart-row').forEach(function(row) {
-            let cb = row.querySelector('.cart-check');
-
-            if (!cb.checked) return;
-
-            let kode = row.querySelector('.kode-barang').innerText.replace('Kode: ', '').trim();
-            let qty = row.querySelector('input[name="jumlah"]').value;
-            let harga = row.querySelector('.item-total').dataset.price;
-
-            selectedItems.push({
-                kode_barang: kode,
-                qty: qty,
-                harga: parseInt(harga)
-            });
-        });
-
-        selectedItemsInput.value = JSON.stringify(selectedItems);
-    });
-
 });
 </script>
-
 @endsection

@@ -7,15 +7,16 @@
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {{-- Tombol Kembali dan Judul --}}
         <div class="mb-8">
-            <a href="{{ url()->previous() }}" 
-               class="inline-flex items-center text-gray-600 hover:text-green-700 font-medium transition">
+        <a href="{{ url('/') }}" 
+            class="inline-flex items-center text-gray-600 hover:text-green-700 font-medium transition">
                 <svg xmlns="http://www.w3.org/2000/svg" 
-                     class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor" stroke-width="2">
+                    class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 Kembali
             </a>
+
             <h1 class="text-2xl font-bold text-gray-800 mt-3">Profil Pelanggan</h1>
         </div>
 
@@ -52,14 +53,15 @@
                             <p class="text-gray-800">{{ $pelanggan->PIC ?? '-' }}</p>
                         </div>
 
-                        <div>
+                        {{-- <div>
                             <p class="font-medium text-gray-600">Tipe Harga:</p>
                             <p class="text-gray-800 capitalize">{{ $pelanggan->tipe_harga ?? '-' }}</p>
-                        </div>
+                        </div> --}}
 
                         <div>
                             <p class="font-medium text-gray-600">Kategori Pelanggan:</p>
-                            <p class="text-gray-800">{{ $pelanggan->kategoriPelanggan->nama_kategori ?? '-' }}</p>
+                            <p class="text-gray-800">{{ $pelanggan->kategoriPelanggan->kategori_pelanggan ?? '-' }}</p>
+                            
                         </div>
 
                         <div>

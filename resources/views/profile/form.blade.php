@@ -25,11 +25,11 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {{-- Tombol Back dan Judul Halaman --}}
         <div class="mb-8">
-            <a href="{{ url()->previous() }}" 
-               class="inline-flex items-center text-gray-600 hover:text-green-700 font-medium transition">
+            <a href="{{ route('profile.index') }}" 
+            class="inline-flex items-center text-gray-600 hover:text-green-700 font-medium transition">
                 <svg xmlns="http://www.w3.org/2000/svg" 
-                     class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                     stroke="currentColor" stroke-width="2">
+                    class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 Kembali
@@ -92,13 +92,29 @@
                             class="w-full border border-gray-300 rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     </div>
 
-                    {{-- Tipe Harga --}}
-                    <div class="mb-4">
-                        <label for="tipe_harga" class="block text-sm font-medium text-gray-700 mb-1">Tipe Harga</label>
-                        <input type="text" id="tipe_harga" name="tipe_harga"
-                            value="{{ old('tipe_harga', $pelanggan->tipe_harga ?? '') }}"
+                    {{-- kategori pelanggan --}}
+                    {{-- <div class="mb-4">
+                        <label for="kategori_pelanggan" class="block text-sm font-medium text-gray-700 mb-1">Kategori Pelanggan</label>
+                        <input type="text" id="kategori_pelanggan" name="kategori_pelanggan"
+                            value="{{ old('kategori_pelanggan', $pelanggan->kategori_pelanggan ?? '') }}"
                             class="w-full border border-gray-300 rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                    </div>
+                    </div> --}}
+                    <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kategori Pelanggan</label>
+
+                    <select id="kategori_pelanggan_id" name="kategori_pelanggan_id"
+                        class="w-full border border-gray-300 rounded-lg py-2 px-3 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+
+                        <option value="">Pilih kategori...</option>
+
+                        @foreach ($kategori as $k)
+                            <option value="{{ $k->kategori_pelanggan_id }}"
+                                {{ old('kategori_pelanggan_id', $pelanggan->kategori_pelanggan_id ?? '') == $k->kategori_pelanggan_id ? 'selected' : '' }}>
+                                {{ $k->kategori_pelanggan }}
+                            </option>
+                        @endforeach
+                    </select>
+
 
                     {{-- Tombol Simpan --}}
                     <div class="pt-3">
