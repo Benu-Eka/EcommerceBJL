@@ -10,7 +10,6 @@ class Order extends Model
 
     protected $fillable = [
         'pelanggan_id',
-        'user_id',
         'nama_penerima',
         'alamat',
         'metode_pembayaran',
@@ -28,7 +27,7 @@ class Order extends Model
     // RELASI KE DETAIL BARANG DI DALAM ORDER
     public function items()
     {
-        return $this->hasMany(OrderItem::class, 'order_id');
+        return $this->hasMany(OrderItem::class, 'order_id', 'order_id');
     }
 
     // RELASI KE TABEL PEMBAYARAN (MIDTRANS)

@@ -118,7 +118,14 @@
             {{-- BAGIAN KANAN - RINGKASAN --}}
             <div class="bg-white rounded-xl shadow p-4 h-fit text-sm sticky top-4">
                 <h2 class="text-base font-semibold mb-3 text-gray-800">Ringkasan Belanja</h2>
-
+                <div id="cartItems" class="space-y-2 mb-3 text-sm text-gray-700">
+   
+                    @foreach ($cartItems as $item)
+                        <div class="flex justify-between">
+                            <span>{{ $item->barang->nama_barang }} (x{{ $item->jumlah }})</span>
+                            <span>Rp {{ number_format($item->barang->harga_jual * $item->jumlah, 0, ',', '.') }}</span>
+                        </div>
+                    @endforeach
                 <div class="space-y-2 text-gray-700">
                     <div class="flex justify-between">
                         <span>Subtotal</span>
@@ -137,6 +144,9 @@
                         <span>Total Bayar</span>
                         <span id="totalBayar">Rp {{ number_format($subtotal + 5000, 0, ',', '.') }}</span>
                     </div>
+                    
+                </div>
+
                 </div>
 
                 <form action="{{ route('orders.checkout') }}">

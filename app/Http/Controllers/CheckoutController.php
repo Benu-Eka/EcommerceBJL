@@ -17,45 +17,51 @@ class CheckoutController extends Controller
      *  TAMPILKAN HALAMAN CHECKOUT
      *  =========================*/
     public function showCheckout()
-{
-    $pelanggan = Auth::guard('pelanggan')->user();
-    if (!$pelanggan) {
-        return redirect()->route('pelanggan.login')->with('error', 'Silakan login terlebih dahulu.');
-    }
+    {
+        $pelanggan = Auth::guard('pelanggan')->user();
 
-    $cartItems = $pelanggan->cartItems()->with('barang')->get();
+        if (!$pelanggan) {
+            return redirect()->route('pelanggan.login')->with('error', 'Silakan login terlebih dahulu.');
+        }
 
-    return view('orders.checkout', compact('cartItems'));
-}
-
-        // Ambil isi keranjang
         $cartItems = $pelanggan->cartItems()->with('barang')->get();
+
         $subtotal = $cartItems->sum(function ($item) {
             return $item->barang->harga_jual * $item->jumlah;
         });
 
-        return view('orders.checkout', compact('pelanggan', 'cartItems', 'subtotal'));
+        $biayaPengiriman = 5000;
+        $diskon = $subtotal * 0.10;
+        $totalBayar = $subtotal - $diskon + $biayaPengiriman;
+
+        return view('orders.checkout', compact(
+            'cartItems',
+            'subtotal',
+            'diskon',
+            'biayaPengiriman',
+            'totalBayar'
+        ));
     }
+
 
     /** =========================
      *  PROSES ORDER + MIDTRANS
      *  =========================*/
     public function process(Request $request)
     {
-        $pelanggan = Auth::user();
+        $pelanggan = Auth::guard('pelanggan')->user();
 
-        // Hitung total
         $cartItems = $pelanggan->cartItems()->with('barang')->get();
+
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Keranjang masih kosong');
         }
 
-        $subtotal = $cartItems->sum(function ($i) {
-            return $i->barang->harga_jual * $i->jumlah;
-        });
+        $subtotal = $cartItems->sum(fn($i) => $i->barang->harga_jual * $i->jumlah);
 
         // Simpan ORDER
-        $order = Order::create([
+        $order = Order::create(
+            [
             'pelanggan_id' => $pelanggan->pelanggan_id,
             'nama_penerima' => $request->nama_penerima,
             'alamat' => $request->alamat,
@@ -63,7 +69,9 @@ class CheckoutController extends Controller
             'total' => $subtotal
         ]);
 
-        // Simpan ITEM ORDER
+            \Log::info("ORDER INSERTED", [$order]);
+
+
         foreach ($cartItems as $item) {
             OrderItem::create([
                 'order_id' => $order->order_id,
@@ -73,27 +81,27 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // Midtrans Init
-        Config::$serverKey    = config('midtrans.server_key');
+        // Midtrans Setup
+        Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production', false);
-        Config::$isSanitized  = true;
-        Config::$is3ds        = true;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
 
         $midtransParams = [
             'transaction_details' => [
                 'order_id' => 'ORDER-' . $order->order_id . '-' . time(),
-                'gross_amount' => $order->total
+                'gross_amount' => intval($order->total)
             ],
             'customer_details' => [
                 'first_name' => $pelanggan->nama_pelanggan,
-                'email'      => $pelanggan->email,
-                'phone'      => $pelanggan->telepon ?? '-'
+                'email' => $pelanggan->email,
+                'phone' => $pelanggan->telepon ?? '-'
             ]
         ];
 
+\Log::info("MIDTRANS PARAMS", $midtransParams);
         $snapToken = Snap::getSnapToken($midtransParams);
 
-        // Simpan ID midtrans ke order
         $order->update([
             'midtrans_order_id' => $midtransParams['transaction_details']['order_id']
         ]);
@@ -103,6 +111,7 @@ class CheckoutController extends Controller
             'order_id'   => $order->order_id
         ]);
     }
+
 
     /** =========================
      *  CALLBACK MIDTRANS
@@ -115,10 +124,10 @@ class CheckoutController extends Controller
         if (!$order) return;
 
         if ($data->transaction_status == 'settlement') {
+
             $order->update(['status' => 'dibayar']);
 
-            // Otomatis buat surat jalan
-            // -------------------------
+            // Buat surat jalan otomatis
             \DB::table('surat_jalan')->insert([
                 'order_id' => $order->order_id,
                 'tanggal'  => now(),
@@ -130,4 +139,5 @@ class CheckoutController extends Controller
             $order->update(['status' => 'batal']);
         }
     }
+
 }

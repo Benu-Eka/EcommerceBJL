@@ -33,8 +33,8 @@
         <div class="space-y-6">
             {{-- BELUM BAYAR --}}
             <div id="tab-belum-bayar" class="tab-panel">
-                @if(!empty($orders['belum_bayar']))
-                    @foreach ($orders['belum_bayar'] as $order)
+                @if(!empty($pesananBelumBayar))
+                    @foreach ($pesananBelumBayar as $order)
                         @include('components.order-card', ['order' => $order])
                     @endforeach
                 @else

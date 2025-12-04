@@ -9,7 +9,6 @@ class SuratJalan extends Model
 {
     use HasFactory;
 
-    protected $table = 'surat_jalans';
     protected $primaryKey = 'sj_id';
     public $incrementing = false;
     protected $keyType = 'string';
@@ -18,10 +17,31 @@ class SuratJalan extends Model
         'sj_id',
         'user_id',
         'pelanggan_id',
+        'nama_penerima',
         'tanggal_surat',
         'status',
-        'biaya_pengiriman',
-        'diskon_pelanggan',
-        'subtotal',
+        'biaya_pengiriman',   
+        'diskon_pelanggan',   
+        'subtotal', 
     ];
+
+    // Relasi ke User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
+    // Relasi ke Pelanggan
+    public function pelanggan()
+    {
+        return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'pelanggan_id');
+    }
+
+    // Relasi ke Detail Surat Jalan
+    public function details()
+    {
+        return $this->hasMany(SuratJalanDetail::class, 'sj_id', 'sj_id');
+    }
+
+
 }

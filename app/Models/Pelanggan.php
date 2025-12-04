@@ -34,5 +34,9 @@ class Pelanggan extends Authenticatable
         return $this->belongsTo(KategoriPelanggan::class, 'kategori_pelanggan_id', 'kategori_pelanggan_id');
     }
 
-                                                                        
+public function cartItems()
+{
+    return $this->hasMany(\App\Models\Cart::class, 'pelanggan_id');
+}
+    
 }

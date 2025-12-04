@@ -6,8 +6,18 @@
     }
 @endphp
 
-<header class="shadow-lg bg-red-800 sticky top-0 z-50">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">    
+{{-- <header class="shadow-2xl sticky top-0 z-50 bg-gradient-to-t from-red-900 via-red-900 via-75% to-black relative"> --}}
+<header class="shadow-2xl sticky top-0 z-50 bg-red-900 relative">
+    <div class="absolute inset-0 z-0 opacity-5" 
+        style="background-image: url('{{ asset('build/assets/images/batik.png') }}'); 
+                background-size: 600px; 
+                background-repeat: repeat;
+                background-position: center; 
+                background-blend-mode: overlay;
+                pointer-events: none;
+                filter: grayscale(100%);"> 
+    </div>
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">    
         {{-- Row Utama: Search | Logo/Brand | Ikon Navigasi --}}
         <div class="flex items-center py-4 border-b border-white border-opacity-20">            
             
@@ -84,7 +94,7 @@
                 </a> --}}
                 
                 {{-- Ikon Profil --}}
-                <a href="/profile" class="text-white hover:text-red-300 p-2 rounded-full transition duration-300">
+                <a href="/profile" class="text-white hover:text-red-300 p-2 rounded-full transition duration-300 relative">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                             d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>

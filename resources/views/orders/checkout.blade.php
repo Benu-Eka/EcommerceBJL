@@ -50,58 +50,36 @@
                             <input type="radio" name="pembayaran" value="midtrans" checked class="accent-green-600">
                             <div>
                                 <p class="font-medium text-gray-800">Pembayaran Online (Midtrans)</p>
-                                <p class="text-xs text-gray-500">Kartu Kredit, Transfer Bank, E-Wallet, QRIS</p>
-                            </div>
-                        </label>
-
-                        <label class="flex items-center gap-3">
-                            <input type="radio" name="pembayaran" value="cod" class="accent-green-600">
-                            <div>
-                                <p class="font-medium text-gray-800">Bayar di Tempat (COD)</p>
-                                <p class="text-xs text-gray-500">Bayar langsung ke kurir saat barang diterima</p>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                {{-- BAGIAN KANAN - RINGKASAN --}}
-                <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 h-fit">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-3">Ringkasan Pesanan</h2>
-
-                    {{-- Daftar Barang Sementara (simulasi tampilan) --}}
-                    <div id="cartItems" class="space-y-2 mb-3 text-sm text-gray-700">
-                        <div class="flex justify-between">
-                            <span>Beras Premium 5kg</span>
-                            <span>Rp 70.000</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Minyak Goreng 2L</span>
-                            <span>Rp 35.000</span>
-                        </div>
-                    </div>
-
-                    <hr class="my-3">
-
                     {{-- Ringkasan --}}
                     <div class="space-y-1 text-sm text-gray-700">
-                        <div class="flex justify-between">
-                            <span>Subtotal</span>
-                            <span id="subtotal">Rp 105.000</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Diskon (10%)</span>
-                            <span id="diskon" class="text-green-600">-Rp 10.500</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Biaya Pengiriman</span>
-                            <span id="biayaPengiriman">Rp 5.000</span>
-                        </div>
-                        <hr class="my-2">
-                        <div class="flex justify-between font-semibold text-gray-900 text-base">
-                            <span>Total Bayar</span>
-                            <span id="totalBayar">Rp 99.500</span>
-                        </div>
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span id="subtotal">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                     </div>
+
+                    <div class="flex justify-between">
+                        <span>Diskon (10%)</span>
+                        <span id="diskon">- Rp {{ number_format($diskon, 0, ',', '.') }}</span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>Biaya Pengiriman</span>
+                        <span id="biayaPengiriman">Rp {{ number_format($biayaPengiriman, 0, ',', '.') }}</span>
+                    </div>
+
+                    <hr class="my-2">
+
+                    <div class="flex justify-between font-semibold text-gray-900 text-base">
+                        <span>Total Bayar</span>
+                        <span id="totalBayar">Rp {{ number_format($totalBayar, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+
 
                     <button type="button" id="pay-button" form="checkoutForm"
                         class="w-full mt-5 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition text-sm">
@@ -146,6 +124,11 @@ Swal.fire({
 </script>
 @endif
 
+{{-- Midtrans Snap Script (WAJIB ADA) --}}
+<script src="https://app.midtrans.com/snap/snap.js"
+    data-client-key="{{ config('midtrans.client_key') }}">
+</script>
+
 <script>
 document.getElementById('pay-button').addEventListener('click', function () {
 
@@ -187,6 +170,7 @@ document.getElementById('pay-button').addEventListener('click', function () {
     });
 });
 </script>
+
 
 
 @endsection
