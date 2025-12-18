@@ -58,9 +58,10 @@
 
                     {{-- Grid Produk DINAMIS --}}
                     <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                        
-                        @forelse ($products as $product)
-                            {{-- x-product-card harus diimplementasikan dengan styling yang baik --}}
+    
+                    @forelse ($products as $product)
+                        {{-- Hanya tampilkan jika status is_visible bernilai 1 --}}
+                        @if($product->is_visible)
                             <x-product-card 
                                 :kodeBarang="$product->kode_barang"
                                 :name="$product->nama_barang"
@@ -70,15 +71,15 @@
                                 :image="$product->foto_produk"
                                 :productLink="route('product.detail', $product->kode_barang)"
                             />
-
-                        @empty
-                            <div class="col-span-full text-center py-20 bg-white rounded-lg shadow-lg border border-gray-100">
-                                <p class="text-2xl font-bold text-gray-700 mb-2">😭 Ups! Produk Tidak Ditemukan</p>
-                                <p class="text-gray-500">Coba kata kunci lain atau periksa kembali ejaan Anda.</p>
-                            </div>
-                        @endforelse
-                        
-                    </div>
+                        @endif
+                    @empty
+                        <div class="col-span-full text-center py-20 bg-white rounded-lg shadow-lg border border-gray-100">
+                            <p class="text-2xl font-bold text-gray-700 mb-2">😭 Ups! Produk Tidak Ditemukan</p>
+                            <p class="text-gray-500">Coba kata kunci lain atau periksa kembali ejaan Anda.</p>
+                        </div>
+                    @endforelse
+                    
+                </div>
 
                     {{-- Pagination --}}
                     <div class="mt-10 flex justify-center">

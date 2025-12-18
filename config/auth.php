@@ -4,7 +4,12 @@ return [
 'guards' => [
     'web' => [
         'driver' => 'session',
-        'provider' => 'users',
+        'provider' => 'pelanggans', // jika login default adalah pelanggan Breeze
+    ],
+
+    'admin' => [
+        'driver' => 'session',
+        'provider' => 'users', // untuk admin
     ],
 
     'pelanggan' => [
@@ -14,6 +19,11 @@ return [
 ],
 
 'providers' => [
+
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
 
     'pelanggans' => [
         'driver' => 'eloquent',

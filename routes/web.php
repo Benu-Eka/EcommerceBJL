@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminChatController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\PelangganAuthController;
 use App\Http\Controllers\ProfileController;
@@ -9,7 +11,17 @@ use App\Http\Controllers\KategoriBarangController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\ChatController;
 
+// Admin Dashboard + Chat
+Route::prefix('admin')->middleware('auth:admin')->group(function () {
+    Route::get('/dashboard', fn() => 'Dashboard Admin')->name('admin.dashboard');
+
+    Route::get('/chat', [AdminChatController::class, 'index'])->name('admin.chat.index');
+    Route::get('/chat/{pelanggan}', [AdminChatController::class, 'show'])->name('admin.chat.show');
+    Route::post('/chat/{pelanggan}', [AdminChatController::class, 'send'])->name('admin.chat.send');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +34,7 @@ Route::post('/logout-pelanggan', [PelangganAuthController::class, 'logout'])->na
 
 Route::get('/register-pelanggan', [PelangganAuthController::class, 'showRegisterForm'])->name('pelanggan.register.form');
 Route::post('/register-pelanggan', [PelangganAuthController::class, 'register'])->name('pelanggan.register');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +88,10 @@ Route::middleware('auth:pelanggan')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::get('/chat/fetch', [ChatController::class, 'fetch'])->name('chat.fetch');
+
     // HISTORY PESANAN
     Route::get('/pesanan', [OrderController::class, 'pesanan'])->name('orders.pesanan');
 });
@@ -86,7 +103,6 @@ Route::middleware('auth:pelanggan')->group(function () {
 */
 Route::view('/promo', 'products.promo')->name('promo');
 Route::view('/favorit', 'products.favorit')->name('favorit');
-Route::view('/chat', 'products.chat')->name('chat');
 Route::view('/riwayat', 'orders.riwayat')->name('riwayat');
 
 require __DIR__ . '/auth.php';
@@ -109,3 +125,4 @@ Route::get('/orders/failed', [OrderController::class, 'failed'])->name('orders.f
 Route::get('/pesanan/{order_id}', [OrderController::class, 'show'])->name('orders.show');
 
 Route::get('/orders/riwayat', [OrderController::class, 'riwayat'])->name('orders.riwayat');
+

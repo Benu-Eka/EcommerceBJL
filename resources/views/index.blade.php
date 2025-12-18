@@ -109,59 +109,81 @@
         </section>
 
         {{-- BANNER PENAWARAN KHUSUS (Thematic) - RE-STYLED --}}
-        <section class="mb-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
-                {{-- Banner 1: Flash Sale (Dominan Dark Blue) --}}
-                <div class="bg-blue-900 text-white p-8 rounded-xl shadow-lg relative overflow-hidden h-72 transform hover:scale-[1.02] transition duration-300">
-                    <div class="relative z-10 flex flex-col justify-between h-full">
-                        <div>
-                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block shadow-md">FLASH SALE</span>
-                            <h3 class="text-3xl font-extrabold mb-3 leading-tight">Penjualan Terbaik Akhir Bulan!</h3>
-                            <div class="flex space-x-3 text-center text-sm font-semibold">
-                                <div class="bg-blue-800 p-2 rounded-lg min-w-[50px]"><span>00</span><div class="text-xs font-normal mt-1 text-gray-300">Hari</div></div>
-                                <div class="bg-blue-800 p-2 rounded-lg min-w-[50px]"><span>02</span><div class="text-xs font-normal mt-1 text-gray-300">Jam</div></div>
-                                <div class="bg-blue-800 p-2 rounded-lg min-w-[50px]"><span>18</span><div class="text-xs font-normal mt-1 text-gray-300">Menit</div></div>
-                                <div class="bg-blue-800 p-2 rounded-lg min-w-[50px]"><span>46</span><div class="text-xs font-normal mt-1 text-gray-300">Detik</div></div>
-                            </div>
-                        </div>
-                        <a href="/product" class="bg-white text-blue-900 font-bold py-2.5 px-6 rounded-full w-fit hover:bg-gray-100 transition duration-300 shadow-xl">
-                            Belanja Sekarang →
-                        </a>
-                    </div>
-                </div>
-
-                {{-- Banner 2: Bahan Baku (High Contrast Black & Yellow) --}}
-                <div class="bg-gray-900 text-white p-8 rounded-xl shadow-lg relative overflow-hidden h-72 transform hover:scale-[1.02] transition duration-300">
-                    <div class="absolute inset-0 z-0 bg-opacity-30" style="background-image: url('{{ asset('images/bahan-baku-promo.jpg') }}'); background-size: cover; background-position: center; filter: grayscale(100%);"></div>
-                    <div class="relative z-10 flex flex-col justify-end h-full">
-                        <span class="bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full w-fit mb-3 shadow-md">HARGA DISTRIBUTOR</span>
-                        <h3 class="text-3xl font-extrabold mb-1 leading-tight">Stok Bahan Baku Massal</h3>
-                        <p class="text-lg mb-4 text-gray-300">Mulai dari <span class="text-yellow-400 font-extrabold">Rp 12.000/kg</span></p>
-                        <a href="/product" class="bg-white text-black font-bold py-2.5 px-6 rounded-full w-fit hover:bg-gray-100 transition duration-300 shadow-xl">
-                            Cek Stok →
-                        </a>
-                    </div>
-                </div>
-
-                {{-- Banner 3: Bumbu Bubuk (Dominan Red & Image Focus) --}}
-                <div class="bg-red-700 text-white p-8 rounded-xl shadow-lg relative overflow-hidden h-72 transform hover:scale-[1.02] transition duration-300">
-                    <div class="absolute right-0 bottom-0 z-0 w-full h-full opacity-60" 
-                         style="background-image: url('{{ asset('images/rempah-promo.png') }}'); background-size: 70%; background-repeat: no-repeat; background-position: 120% bottom;">
-                    </div>
-                    <div class="relative z-10 flex flex-col justify-between h-full">
-                        <div>
-                            <span class="bg-white text-red-700 text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block shadow-md">GROSIR BUMBU</span>
-                            <h3 class="text-3xl font-extrabold mb-1 leading-tight">Promo Stok Bumbu Bubuk</h3>
-                            <p class="text-lg text-gray-200">Diskon hingga <span class="text-yellow-300 font-extrabold">44%</span></p>
-                        </div>
-                        <a href="/product" class="bg-white text-red-700 font-bold py-2.5 px-6 rounded-full w-fit hover:bg-gray-100 transition duration-300 shadow-xl">
-                            Beli Sekarang →
-                        </a>
-                    </div>
-                </div>
+        {{-- SECTION: KATEGORI STRATEGIS (Terlaris, Terbaru, Stok Hampir Habis) --}}
+<section class="mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        {{-- 1. PRODUK TERLARIS BULAN INI --}}
+        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-blue-900 p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-80 flex flex-col justify-between">
+            {{-- Background Decor --}}
+            <div class="absolute -right-6 -top-6 text-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
+                <i class="fa-solid fa-fire-flame-curved text-9xl"></i>
             </div>
-        </section>
+
+            <div class="relative z-10">
+                <span class="inline-block rounded-full bg-blue-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-blue-300 shadow-sm outline outline-1 outline-blue-400/30">
+                    Trending
+                </span>
+                <h3 class="mt-4 text-3xl font-extrabold leading-tight text-white">Produk Terlaris <br> Bulan Ini</h3>
+                <p class="mt-2 text-sm text-slate-300 leading-relaxed">Produk yang paling banyak dibeli dan dipercaya oleh pelanggan setia kami.</p>
+            </div>
+
+            <div class="relative z-10">
+                <a href="/product?sort=terlaris" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-blue-900 transition-colors hover:bg-blue-50">
+                    Lihat Koleksi
+                    <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                </a>
+            </div>
+        </div>
+
+        {{-- 2. PRODUK TERBARU --}}
+        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-700 p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-80 flex flex-col justify-between">
+            {{-- Background Decor --}}
+            <div class="absolute -right-6 -top-6 text-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
+                <i class="fa-solid fa-sparkles text-9xl"></i>
+            </div>
+
+            <div class="relative z-10">
+                <span class="inline-block rounded-full bg-emerald-400/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-200 shadow-sm outline outline-1 outline-emerald-300/30">
+                    Fresh Stock
+                </span>
+                <h3 class="mt-4 text-3xl font-extrabold leading-tight text-white">Koleksi Produk <br> Terbaru</h3>
+                <p class="mt-2 text-sm text-emerald-50/80 leading-relaxed">Update stok bumbu dan sembako segar yang baru saja tiba di gudang kami.</p>
+            </div>
+
+            <div class="relative z-10">
+                <a href="/product?sort=terbaru" class="inline-flex items-center gap-2 rounded-xl bg-emerald-950 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-900 border border-emerald-500/50">
+                    Cek Produk Baru
+                    <i class="fa-solid fa-leaf text-xs transition-transform group-hover:rotate-12"></i>
+                </a>
+            </div>
+        </div>
+
+        {{-- 3. STOK HAMPIR HABIS --}}
+        <div class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-700 to-orange-600 p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-80 flex flex-col justify-between">
+            {{-- Background Decor --}}
+            <div class="absolute -right-6 -top-6 text-white/10 transition-transform duration-500 group-hover:scale-110">
+                <i class="fa-solid fa-hourglass-half text-9xl"></i>
+            </div>
+
+            <div class="relative z-10">
+                <span class="inline-block animate-pulse rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm outline outline-1 outline-white/40">
+                    Cepat Kehabisan
+                </span>
+                <h3 class="mt-4 text-3xl font-extrabold leading-tight text-white">Stok Produk <br> Hampir Habis</h3>
+                <p class="mt-2 text-sm text-rose-50 leading-relaxed">Segera amankan pesanan Anda! Item ini sedang dalam permintaan tinggi.</p>
+            </div>
+
+            <div class="relative z-10">
+                <a href="/product?filter=low_stock" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-rose-700 transition-all hover:bg-rose-50 shadow-lg shadow-black/10">
+                    Borong Sekarang
+                    <i class="fa-solid fa-cart-shopping text-xs"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
 
     </main>
 
