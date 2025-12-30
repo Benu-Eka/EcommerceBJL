@@ -60,7 +60,7 @@
             {{-- 2. Logo dan Nama Brand (TENGAH) --}}
             <div class="w-1/3 flex justify-center">
                 <a href="{{ url('/') }}" class="flex flex-col items-center">
-                    <img src="{{ asset('build/assets/images/logo2.png') }}" alt="Fanjaya Mulia Abadi" class="h-12 mb-1">
+                    <img src="{{ asset('build/assets/images/Logo_fanjaya_trans.png') }}" alt="Fanjaya Mulia Abadi" class="h-12 mb-1">
                 </a>
             </div>
 

@@ -16,7 +16,7 @@
             <div class="col-span-2 lg:col-span-2 space-y-4">
                 <div class="flex items-center space-x-2">
                     {{-- Logo: Diinvert agar putih --}}
-                    <img src="{{ asset('build/assets/images/logo2.png') }}" alt="Fanjaya Mulia Abadi" class="h-12 filter brightness-0 invert">
+                    <img src="{{ asset('build/assets/images/Logo_fanjaya_trans.png') }}" alt="Fanjaya Mulia Abadi" class="h-12 filter brightness-0 invert">
                     <span class="text-xl font-extrabold text-white">Berkah Jaya Lumintu</span>
                 </div>
                 <p class="text-gray-400 text-sm max-w-sm">
