@@ -1,104 +1,113 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-[#f8fafc] flex flex-col font-sans">
+    {{-- Navbar --}}
     <x-navbar />
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {{-- Tombol Kembali dan Judul --}}
-        <div class="mb-8">
-        <a href="{{ url('/') }}" 
-            class="inline-flex items-center text-gray-600 hover:text-green-700 font-medium transition">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-                Kembali
-            </a>
-
-            <h1 class="text-2xl font-bold text-gray-800 mt-3">Profil Pelanggan</h1>
-        </div>
-
-        {{-- Kartu Profil --}}
-        <div class="bg-white rounded-2xl shadow border border-gray-100 p-8">
-            <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
-                {{-- Foto Profil --}}
-                <div class="flex-shrink-0">
-                    <img src="https://via.placeholder.com/128x128/16a34a/FFFFFF?text=User"
-                         alt="Foto Profil"
-                         class="h-28 w-28 rounded-full object-cover border-4 border-green-200 shadow-md">
-                </div>
-
-                {{-- Informasi Akun --}}
-                <div class="flex-1 space-y-4">
-                    <div>
-                        <h2 class="text-xl font-semibold text-gray-800">{{ $pelanggan->nama_pelanggan ?? 'Nama Pelanggan' }}</h2>
-                        <p class="text-sm text-gray-500">{{ $pelanggan->email ?? '-' }}</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                            <p class="font-medium text-gray-600">Alamat:</p>
-                            <p class="text-gray-800">{{ $pelanggan->alamat ?? '-' }}</p>
-                        </div>
-
-                        <div>
-                            <p class="font-medium text-gray-600">NPWP:</p>
-                            <p class="text-gray-800">{{ $pelanggan->NPWP ?? '-' }}</p>
-                        </div>
-
-                        <div>
-                            <p class="font-medium text-gray-600">Nama Kontak / PIC:</p>
-                            <p class="text-gray-800">{{ $pelanggan->PIC ?? '-' }}</p>
-                        </div>
-
-                        {{-- <div>
-                            <p class="font-medium text-gray-600">Tipe Harga:</p>
-                            <p class="text-gray-800 capitalize">{{ $pelanggan->tipe_harga ?? '-' }}</p>
-                        </div> --}}
-
-                        <div>
-                            <p class="font-medium text-gray-600">Kategori Pelanggan:</p>
-                            <p class="text-gray-800">{{ $pelanggan->kategoriPelanggan->kategori_pelanggan ?? '-' }}</p>
-                            
-                        </div>
-
-                        <div>
-                            <p class="font-medium text-gray-600">Tanggal Bergabung:</p>
-                            <p class="text-gray-800">{{ $pelanggan->created_at ? $pelanggan->created_at->format('d M Y') : '-' }}</p>
-                        </div>
-                    </div>
-
-                    {{-- Tombol Aksi --}}
-                    <div class="pt-4 flex flex-wrap gap-3">
-                        <a href="{{ route('profile.edit') }}"
-                           class="inline-flex items-center px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-full transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" 
-                                 class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" 
-                                 stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5l3 3L12 15l-3.5.5.5-3.5L18.5 2.5z"/>
+    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl w-full">
+            
+            {{-- Header & Back Button --}}
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+                <div>
+                    <a href="{{ url('/') }}" class="group inline-flex items-center text-sm font-semibold text-gray-500 hover:text-red-600 transition-all duration-300">
+                        <div class="p-2 bg-white rounded-lg shadow-sm group-hover:shadow-md group-hover:-translate-x-1 transition-all mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                             </svg>
-                            Edit Profil
-                        </a>
+                        </div>
+                        Kembali ke Beranda
+                    </a>
+                    <h1 class="text-3xl font-black text-gray-900 mt-4 tracking-tight">Akun <span class="text-red-600">Saya</span></h1>
+                </div>
+                <!-- <div class="hidden md:block">
+                    <span class="px-4 py-2 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest rounded-full border border-red-100">
+                        Status: Aktif
+                    </span>
+                </div> -->
+            </div>
 
-                        <form action="{{ route('pelanggan.logout') }}" method="POST">
-                            @csrf
-                            <button type="submit"
-                                class="inline-flex items-center px-5 py-2.5 border border-gray-300 bg-white text-gray-700 text-sm font-semibold rounded-full hover:bg-gray-100 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" 
-                                     class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24"
-                                     stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" 
-                                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"/>
-                                </svg>
-                                Logout
-                            </button>
-                        </form>
+            {{-- Main Profile Card --}}
+            <div class="bg-white rounded-[2.5rem] shadow-xl shadow-gray-200/50 overflow-hidden border border-gray-100">
+                <div class="flex flex-col md:flex-row">
+                    
+                    {{-- Sisi Kiri: Visual/Avatar --}}
+                    <div class="md:w-1/3 bg-gradient-to-br from-red-600 to-red-700 p-10 flex flex-col items-center justify-center text-white relative overflow-hidden">
+                        {{-- Ornamen Dekoratif --}}
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-red-900/20 rounded-full blur-2xl"></div>
+                        
+                        <div class="relative">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($pelanggan->nama_pelanggan) }}&background=ffffff&color=dc2626&size=128"
+                                 alt="Avatar"
+                                 class="h-32 w-32 rounded-3xl object-cover border-4 border-white/30 shadow-2xl transition-transform hover:scale-105 duration-500">
+                            <div class="absolute -bottom-2 -right-2 bg-green-500 border-4 border-red-600 w-8 h-8 rounded-full flex items-center justify-center" title="Online">
+                                <div class="w-2 h-2 bg-white rounded-full animate-ping"></div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="mt-6 font-bold text-xl text-center leading-tight">{{ $pelanggan->nama_pelanggan ?? 'Member' }}</h3>
+                        <p class="text-red-100 text-sm opacity-80">{{ $pelanggan->kategoriPelanggan->kategori_pelanggan ?? 'Customer' }}</p>
+                    </div>
+
+                    {{-- Sisi Kanan: Detail --}}
+                    <div class="md:w-2/3 p-8 md:p-12">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+                            
+                            {{-- Info Item --}}
+                            <div class="space-y-1">
+                                <label class="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Email Utama</label>
+                                <p class="text-gray-800 font-semibold truncate">{{ $pelanggan->email ?? '-' }}</p>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">NPWP</label>
+                                <p class="text-gray-800 font-semibold">{{ $pelanggan->NPWP ?? '-' }}</p>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Penanggung Jawab (PIC)</label>
+                                <div class="flex items-center text-gray-800 font-semibold">
+                                    <svg class="w-4 h-4 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    {{ $pelanggan->PIC ?? '-' }}
+                                </div>
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Sejak Tanggal</label>
+                                <p class="text-gray-800 font-semibold">{{ $pelanggan->created_at ? $pelanggan->created_at->format('d M, Y') : '-' }}</p>
+                            </div>
+
+                            <div class="sm:col-span-2 space-y-1">
+                                <label class="text-[10px] uppercase tracking-[0.15em] font-bold text-gray-400">Alamat Pengiriman</label>
+                                <p class="text-gray-700 leading-relaxed font-medium bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                                    {{ $pelanggan->alamat ?? '-' }}
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Action Buttons --}}
+                        <div class="mt-10 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
+                            <a href="{{ route('profile.edit') }}"
+                               class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-2xl shadow-lg shadow-red-200 transition-all hover:-translate-y-1 active:scale-95">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5l3 3L12 15l-3.5.5.5-3.5L18.5 2.5z"/></svg>
+                                Perbarui Profil
+                            </a>
+
+                            <form action="{{ route('pelanggan.logout') }}" method="POST" class="flex-1">
+                                @csrf
+                                <button type="submit"
+                                        class="w-full inline-flex items-center justify-center px-6 py-3 border-2 border-gray-200 bg-white text-gray-600 text-sm font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-300 transition-all active:scale-95">
+                                    <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1"/></svg>
+                                    Keluar Sesi
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 

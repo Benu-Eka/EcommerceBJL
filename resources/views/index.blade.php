@@ -14,12 +14,11 @@
                     
                     <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
                         style="background-image: url('{{ asset('build/assets/images/tabura.jpg') }}'); background-size: cover; background-position: center;">
-                        <div class="absolute inset-0 bg-black opacity-40 rounded-lg"></div>
-                        <div class="relative z-10 text-white max-w-lg">
-                            <span class="text-sm font-semibold mb-1 block">DISKON HINGGA 30%</span>
-                            <h2 class="text-3xl md:text-4xl font-extrabold mb-3">Stok Bumbu Bubuk dan Rempah Pilihan</h2>
-                            <a href="/product"
-                                class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 rounded-lg"></div>
+                        <div class="relative z-10 text-white max-w-lg space-y-3">
+                            <span class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-white/90">DISKON HINGGA 30%</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold mb-0">Stok Bumbu Bubuk dan Rempah Pilihan</h2>
+                            <a href="/product" class="inline-flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-6 rounded-full shadow-md transition transform hover:-translate-y-0.5">
                                 BELANJA SEKARANG →
                             </a>
                         </div>
@@ -27,12 +26,11 @@
 
                     <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
                         style="background-image: url('{{ asset('build/assets/images/sembako.jpg') }}'); background-size: cover; background-position: center;">
-                        <div class="absolute inset-0 bg-indigo-900 opacity-40 rounded-lg"></div>
-                        <div class="relative z-10 text-white max-w-lg">
-                            <span class="text-sm font-semibold mb-1 block text-yellow-300">STOK AMAN HARGA MURAH</span>
-                            <h2 class="text-3xl md:text-4xl font-extrabold mb-3">Kebutuhan Sembako untuk Grosir & Ritel</h2>
-                            <a href="/product"
-                                class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-semibold py-2 px-6 rounded-full transition duration-300">
+                        <div class="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-indigo-900/60 rounded-lg"></div>
+                        <div class="relative z-10 text-white max-w-lg space-y-3">
+                            <span class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-yellow-300">STOK AMAN HARGA MURAH</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold mb-0">Kebutuhan Sembako untuk Grosir & Ritel</h2>
+                            <a href="/product" class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-semibold py-2 px-6 rounded-full shadow transition transform hover:-translate-y-0.5">
                                 CEK SEMUA PRODUK →
                             </a>
                         </div>
@@ -43,43 +41,46 @@
             </div>
 
             <div class="w-full lg:w-1/3 flex flex-col gap-4">
-                <div class="bg-yellow-100 flex-1 p-4 flex items-center justify-between rounded-lg shadow-sm h-1/2">
+                <div class="bg-white flex-1 p-4 flex items-center justify-between rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 h-1/2 border-l-6 border-yellow-400">
                     <div class="max-w-[60%]">
-                        <h4 class="text-xl font-bold text-gray-800 mb-1">Mie Instan Termurah</h4>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-1">Mie Instan Termurah</h4>
                         <p class="text-sm text-gray-600 mb-3">Beli 1 Dus lebih hemat!</p>
                         <a href="/product" class="text-sm text-yellow-700 font-semibold hover:underline">Beli Sekarang →</a>
                     </div>
                     <img src="{{ asset('build/assets/images/mie-instan.jpg') }}"
-                        onerror="this.onerror=null;this.src='https://placehold.co/100x100/FFF/333?text=Mie';"
-                        class="w-1/3 h-auto object-contain">
+                        onerror="this.onerror=null;this.src='https://placehold.co/120x120/FFF/333?text=Mie';"
+                        class="w-28 h-28 object-cover rounded-md">
                 </div>
 
-                <div class="bg-green-100 flex-1 p-4 flex items-center justify-between rounded-lg shadow-sm h-1/2">
+                <div class="bg-white flex-1 p-4 flex items-center justify-between rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1 h-1/2 border-l-6 border-emerald-400">
                     <div class="max-w-[60%]">
-                        <h4 class="text-xl font-bold text-gray-800 mb-1">Promo Khusus Tepung</h4>
+                        <h4 class="text-lg md:text-xl font-bold text-gray-900 mb-1">Promo Khusus Tepung</h4>
                         <p class="text-sm text-gray-600 mb-3">Diskon besar untuk stok bahan baku.</p>
-                        <a href="/product" class="text-sm text-green-700 font-semibold hover:underline">Lihat Promo →</a>
+                        <a href="/product" class="text-sm text-emerald-700 font-semibold hover:underline">Lihat Promo →</a>
                     </div>
                     <img src="{{ asset('build/assets/images/tepung-terigu.jpg') }}"
-                        onerror="this.onerror=null;this.src='https://placehold.co/100x100/FFF/333?text=Tepung';"
-                        class="w-1/3 h-auto object-contain">
+                        onerror="this.onerror=null;this.src='https://placehold.co/120x120/FFF/333?text=Tepung';"
+                        class="w-28 h-28 object-cover rounded-md">
                 </div>
             </div>
         </div>
 
         <section class="mb-12">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Kategori Produk</h2>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Kategori Produk</h2>
+                    <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+                </div>
                 <a href="/product" class="text-green-500 hover:text-green-600 font-medium flex items-center">
                     Lihat Semua →
                 </a>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 overflow-x-auto pb-4 custom-scrollbar">
                 @foreach ($kategoris as $kategori)
-                    <a href="#" class="flex flex-col items-center p-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition duration-300 min-w-[100px] w-full">
+                    <a href="#" class="flex flex-col items-center p-3 rounded-xl bg-white hover:shadow-md hover:scale-105 transition transform duration-300 min-w-[100px] w-full">
                         {{-- Placeholder Logo/Ikon --}}
-                        <div class="w-10 h-10 mb-2 rounded-full bg-green-100 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <div class="w-10 h-10 mb-2 rounded-full bg-red-50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 {{-- Ikon Sederhana (Contoh: Trolley/Keranjang) --}}
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
@@ -91,22 +92,77 @@
         </section>
 
         <hr class="border-gray-200 my-8">
-
+<!-- 
         <section class="mb-12">
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Produk Terlaris Minggu Ini</h2>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Produk Terlaris Minggu Ini</h2>
+                    <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+                </div>
                 <a href="/product" class="text-green-500 hover:text-green-600 font-medium flex items-center">
                     Lihat Semua →
                 </a>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4">
-                <x-product-card name="Garam Premium" price="5.000" oldPrice="8.000" discount="Diskon 30%" image="garam.jpg" />
-                <x-product-card name="Gula Pasir Kristal 1kg" price="17.000" image="gula-pasir.jpg" />
-                <x-product-card name="Minyak Goreng 2L" price="34.900" image="minyak-goreng.png" />
-                <x-product-card name="Kecap Manis Botol 600ml" price="23.500" image="kecap-manis.png" />
-                <x-product-card name="Tepung Terigu Serbaguna" price="12.500" image="tepung-terigu.jpg" />
+                <div class="group transform transition hover:-translate-y-2">
+                    <x-product-card name="Garam Premium" price="5.000" oldPrice="8.000" discount="Diskon 30%" image="garam.jpg" />
+                </div>
+                <div class="group transform transition hover:-translate-y-2">
+                    <x-product-card name="Gula Pasir Kristal 1kg" price="17.000" image="gula-pasir.jpg" />
+                </div>
+                <div class="group transform transition hover:-translate-y-2">
+                    <x-product-card name="Minyak Goreng 2L" price="34.900" image="minyak-goreng.png" />
+                </div>
+                <div class="group transform transition hover:-translate-y-2">
+                    <x-product-card name="Kecap Manis Botol 600ml" price="23.500" image="kecap-manis.png" />
+                </div>
+                <div class="group transform transition hover:-translate-y-2">
+                    <x-product-card name="Tepung Terigu Serbaguna" price="12.500" image="tepung-terigu.jpg" />
+                </div>
             </div>
-        </section>
+        </section> -->
+<section class="mb-12">
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-800">
+                Produk Terlaris Minggu Ini
+            </h2>
+            <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+        </div>
+        <a href="{{ route('product.index') }}"
+           class="text-green-500 hover:text-green-600 font-medium flex items-center">
+            Lihat Semua →
+        </a>
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4">
+        @forelse ($products as $product)
+            @if ($product->is_visible)
+                <div class="group transform transition hover:-translate-y-2">
+                    <x-product-card
+                        :kodeBarang="$product->kode_barang"
+                        :name="$product->nama_barang"
+                        :price="number_format($product->harga_jual, 0, ',', '.')"
+                        :oldPrice="$product->harga_beli 
+                            ? number_format($product->harga_beli, 0, ',', '.') 
+                            : null"
+                        :discount="$product->diskon 
+                            ? 'Diskon ' . $product->diskon . '%' 
+                            : null"
+                        :image="$product->foto_produk"
+                        :productLink="route('product.detail', $product->kode_barang)"
+                    />
+                </div>
+            @endif
+        @empty
+            <div class="col-span-full text-center text-gray-500">
+                Produk terlaris belum tersedia.
+            </div>
+        @endforelse
+    </div>
+</section>
+
+
 
         {{-- BANNER PENAWARAN KHUSUS (Thematic) - RE-STYLED --}}
         {{-- SECTION: KATEGORI STRATEGIS (Terlaris, Terbaru, Stok Hampir Habis) --}}

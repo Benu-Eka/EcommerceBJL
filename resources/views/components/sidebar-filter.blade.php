@@ -1,56 +1,67 @@
-<div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100 sticky top-20">
+<div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 sticky top-24 transition-all duration-300">
     
     {{-- Tombol Filter (Mobile View) --}}
-    <button class="lg:hidden w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 rounded-lg mb-4 flex items-center justify-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6 6V19l-4 2v-8.293l-6-6A1 1 0 013 6V4z"></path></svg>
-        Filter
+    <button class="lg:hidden w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-2xl mb-6 flex items-center justify-center shadow-lg shadow-red-100 transition-all active:scale-95">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6 6V19l-4 2v-8.293l-6-6A1 1 0 013 6V4z"></path>
+        </svg>
+        Filter Produk
     </button>
     
-    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-        <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6 6V19l-4 2v-8.293l-6-6A1 1 0 013 6V4z"></path></svg>
-        Filter
-    </h3>
+    <div class="hidden lg:block">
+        <h3 class="text-xl font-black text-gray-900 mb-6 flex items-center tracking-tight">
+            <div class="w-8 h-8 bg-red-50 rounded-lg flex items-center justify-center mr-3">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6 6V19l-4 2v-8.293l-6-6A1 1 0 013 6V4z"></path>
+                </svg>
+            </div>
+            Filter
+        </h3>
 
-    {{-- Kategori Produk --}}
-    <div class="mb-6 border-b pb-4 border-gray-200">
-        <h4 class="text-md font-semibold text-gray-800 mb-3 uppercase tracking-wider">Semua Kategori</h4>
-        <div class="space-y-2">
-            
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500" checked>
-                <span class="ml-2 font-semibold text-green-600">Sembako <span class="text-gray-500">(360)</span></span>
-            </label>
-            
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="ml-2">Bumbu Dasar & Rempah <span class="text-gray-500">(180)</span></span>
-            </label>
-            
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="ml-2">Bahan Kue & Roti <span class="text-gray-500">(95)</span></span>
-            </label>
-            
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="ml-2">Minuman Serbuk & Bubuk <span class="text-gray-500">(78)</span></span>
-            </label>
-            
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="ml-2">Saus & Kecap <span class="text-gray-500">(52)</span></span>
-            </label>
-            
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="ml-2">Produk Instan <span class="text-gray-500">(41)</span></span>
-            </label>
+        {{-- Kategori Produk --}}
+        <div class="space-y-6">
+            <div>
+                <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">Kategori Utama</h4>
+                <div class="space-y-3">
+                    
+                    {{-- Item Kategori Aktif --}}
+                    <label class="group flex items-center justify-between p-3 rounded-2xl bg-red-50 cursor-pointer transition-all border border-red-100">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-5 h-5 text-red-600 border-none rounded-lg focus:ring-transparent bg-white shadow-sm" checked>
+                            <span class="ml-3 font-bold text-red-700 text-sm">Sembako</span>
+                        </div>
+                        <span class="text-[10px] font-black bg-white px-2 py-1 rounded-md text-red-400">360</span>
+                    </label>
+                    
+                    {{-- Item Kategori Standar --}}
+                    @php
+                        $categories = [
+                            ['name' => 'Bumbu & Rempah', 'count' => 180],
+                            ['name' => 'Bahan Kue', 'count' => 95],
+                            ['name' => 'Minuman Serbuk', 'count' => 78],
+                            ['name' => 'Saus & Kecap', 'count' => 52],
+                            ['name' => 'Produk Instan', 'count' => 41]
+                        ];
+                    @endphp
 
-            <label class="flex items-center text-sm text-gray-700 cursor-pointer">
-                <input type="checkbox" class="form-checkbox h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500">
-                <span class="ml-2">Perlengkapan Dapur <span class="text-gray-500">(20)</span></span>
-            </label>    
+                    @foreach($categories as $cat)
+                    <label class="group flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 cursor-pointer transition-all border border-transparent hover:border-gray-100">
+                        <div class="flex items-center">
+                            <input type="checkbox" class="w-5 h-5 text-red-600 border-gray-200 rounded-lg focus:ring-transparent bg-gray-50 group-hover:bg-white transition-all">
+                            <span class="ml-3 font-bold text-gray-600 group-hover:text-gray-900 text-sm transition-all">{{ $cat['name'] }}</span>
+                        </div>
+                        <span class="text-[10px] font-black text-gray-300 group-hover:text-gray-500 transition-all">{{ $cat['count'] }}</span>
+                    </label>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Filter Tambahan Bisa Di Sini (Misal: Rentang Harga) --}}
+            <div class="pt-6 border-t border-gray-50">
+                <button type="reset" class="w-full py-3 text-xs font-bold text-gray-400 hover:text-red-600 transition-colors uppercase tracking-widest">
+                    Reset Filter
+                </button>
+            </div>
         </div>
     </div>
-
 </div>

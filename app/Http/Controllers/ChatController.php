@@ -30,17 +30,29 @@ public function index()
 
     public function send(Request $request)
     {
-        $request->validate(['message' => 'required']);
+        // Pastikan pelanggan ter-autentikasi
+        if (!Auth::guard('pelanggan')->check()) {
+            return response()->json(['status' => false, 'message' => 'Unauthenticated'], 401);
+        }
 
-        Message::create([
-            'sender_id' => Auth::id(),
-            'sender_type' => 'pelanggan',
-            'receiver_id' => 1,               // ADMIN ID (sesuaikan)
-            'receiver_type' => 'admin',
-            'message' => $request->message
-        ]);
+        \Log::info('Chat send request', ['user' => Auth::guard('pelanggan')->id(), 'message_preview' => \Illuminate\Support\Str::limit($request->message, 120)]);
 
-        return response()->json(['status' => true]);
+        $request->validate(['message' => 'required|string']);
+
+        try {
+            $msg = Message::create([
+                'sender_id' => Auth::guard('pelanggan')->id(),
+                'sender_type' => 'pelanggan',
+                'receiver_id' => 1,               // ADMIN ID (sesuaikan)
+                'receiver_type' => 'admin',
+                'message' => $request->message
+            ]);
+
+            return response()->json(['status' => true, 'id' => $msg->id]);
+        } catch (\Exception $e) {
+            \Log::error('ChatController@send failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['status' => false, 'message' => 'Server error while saving message'], 500);
+        }
     }
 
 public function fetch()
@@ -64,5 +76,4 @@ public function fetch()
 }
 
 }
-
 

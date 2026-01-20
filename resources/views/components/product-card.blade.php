@@ -29,7 +29,7 @@
                      alt="{{ $name }}" 
                      class="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105">
             @else
-                <img src="{{ asset('build/assets/images/' . $image) }}" 
+                <img src="{{ asset('build/assets/' . $image) }}" 
                      alt="{{ $name }}" 
                      onerror="this.onerror=null;this.src='https://placehold.co/150x150?text=No+Image';"
                      class="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105">

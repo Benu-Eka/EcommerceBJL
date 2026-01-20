@@ -54,12 +54,12 @@ class ProfileController extends Controller
             }
 
             $data = $request->validate([
-                'nama_pelanggan' => 'required|string|max:255',
-                'email' => 'required|email|unique:pelanggans,email,' . $pelanggan->pelanggan_id . ',pelanggan_id',
-                'alamat' => 'required|string',
+                'nama_pelanggan' => 'sometimes|required|string|max:255',
+                'email' => 'sometimes|required|email|unique:pelanggans,email,' . $pelanggan->pelanggan_id . ',pelanggan_id',
+                'alamat' => 'sometimes|required|string',
                 'NPWP' => 'nullable|string|max:50',
-                'PIC' => 'required|string|max:100',
-                'kategori_pelanggan_id' => 'required|exists:kategori_pelanggans,kategori_pelanggan_id', // ← WAJIB
+                'PIC' => 'sometimes|required|string|max:100',
+                'kategori_pelanggan_id' => 'sometimes|required|exists:kategori_pelanggans,kategori_pelanggan_id',
                 'password' => 'nullable|min:6|confirmed',
             ]);
             
