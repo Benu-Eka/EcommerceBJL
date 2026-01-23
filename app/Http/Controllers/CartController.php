@@ -142,7 +142,7 @@ public function update(Request $request, $id)
         if ($request->input('action') === 'increase') {
             $cart->jumlah += 1;
         } elseif ($request->input('action') === 'decrease') {
-            $cart->jumlah = max(1, $cart->quantity - 1); // minimal 1
+            $cart->jumlah = max(1, $cart->jumlah - 1); // minimal 1
         } elseif ($request->filled('jumlah')) {
             // Jika user ubah manual lewat input number
             $cart->jumlah = max(1, (int) $request->input('jumlah'));

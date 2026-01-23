@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="min-h-screen bg-gray-100 flex flex-col font-sans">
-    {{-- Navbar --}}
     <x-navbar />
 
     {{-- Konten Utama --}}
@@ -10,23 +9,20 @@
         {{-- Card Container Utama --}}
         <div class="max-w-5xl w-full bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
             
-            {{-- Sisi Kiri: Branding & Ilustrasi --}}
             <div class="w-full md:w-1/2 p-10 flex flex-col justify-center items-center text-center bg-white">
                 <div class="mb-8">
                     <h1 class="text-3xl font-black text-red-600 tracking-tight leading-tight uppercase">
-                        Toko Fanjaya <br> Mulia Abadi
+                        Toko <br> Berkah Jaya Lumintu
                     </h1>
                     <p class="text-gray-500 mt-2 font-medium">Solusi Belanja Terpercaya Anda</p>
                 </div>
 
-                {{-- Placeholder Ilustrasi (Bisa diganti <img src="...">) --}}
                 <div class="relative w-full max-w-xs transition-transform hover:scale-105 duration-500">
                     <img src="{{ asset('build/assets/images/troli.png') }}"
                          alt="Shopping Illustration" class="w-full h-auto">
                 </div>
             </div>
 
-            {{-- Sisi Kanan: Form Login (Background Merah Muda ke Ungu sesuai gambar) --}}
             <div class="w-full md:w-1/2 bg-[#fbcfe8] p-8 md:p-12 flex flex-col justify-center">
                 <div class="max-w-sm mx-auto w-full text-center">
                     <h2 class="text-2xl font-extrabold mb-8 text-red-600 uppercase tracking-widest">

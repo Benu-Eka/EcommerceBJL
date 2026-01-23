@@ -13,7 +13,7 @@
                 <div id="slides-container" class="flex transition-transform duration-500 ease-in-out h-full">
                     
                     <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
-                        style="background-image: url('{{ asset('build/assets/images/tabura.jpg') }}'); background-size: cover; background-position: center;">
+                        style="background-image: url('{{ asset('build/assets/images/tabura-logo.jpg') }}'); background-size: cover; background-position: center;">
                         <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 rounded-lg"></div>
                         <div class="relative z-10 text-white max-w-lg space-y-3">
                             <span class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-white/90">DISKON HINGGA 30%</span>
@@ -58,7 +58,7 @@
                         <p class="text-sm text-gray-600 mb-3">Diskon besar untuk stok bahan baku.</p>
                         <a href="/product" class="text-sm text-emerald-700 font-semibold hover:underline">Lihat Promo →</a>
                     </div>
-                    <img src="{{ asset('build/assets/images/tepung-terigu.jpg') }}"
+                    <img src="{{ asset('build/assets/images/tepung.jpg') }}"
                         onerror="this.onerror=null;this.src='https://placehold.co/120x120/FFF/333?text=Tepung';"
                         class="w-28 h-28 object-cover rounded-md">
                 </div>
@@ -129,38 +129,35 @@
             </h2>
             <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
         </div>
-        <a href="{{ route('product.index') }}"
-           class="text-green-500 hover:text-green-600 font-medium flex items-center">
+        <a href="{{ route('product', ['sort' => 'terlaris']) }}"
+           class="text-green-500 hover:text-green-600 font-medium">
             Lihat Semua →
         </a>
     </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         @forelse ($products as $product)
-            @if ($product->is_visible)
-                <div class="group transform transition hover:-translate-y-2">
-                    <x-product-card
-                        :kodeBarang="$product->kode_barang"
-                        :name="$product->nama_barang"
-                        :price="number_format($product->harga_jual, 0, ',', '.')"
-                        :oldPrice="$product->harga_beli 
-                            ? number_format($product->harga_beli, 0, ',', '.') 
-                            : null"
-                        :discount="$product->diskon 
-                            ? 'Diskon ' . $product->diskon . '%' 
-                            : null"
-                        :image="$product->foto_produk"
-                        :productLink="route('product.detail', $product->kode_barang)"
-                    />
-                </div>
-            @endif
-        @empty
-            <div class="col-span-full text-center text-gray-500">
-                Produk terlaris belum tersedia.
-            </div>
-        @endforelse
+    <x-product-card
+        :kodeBarang="$product->kode_barang"
+        :name="$product->nama_barang"
+        :price="number_format($product->harga_jual, 0, ',', '.')"
+        :oldPrice="$product->harga_beli 
+            ? number_format($product->harga_beli, 0, ',', '.') 
+            : null"
+        :discount="$product->diskon 
+            ? 'Diskon ' . $product->diskon . '%' 
+            : null"
+        :image="$product->foto_produk"
+        :productLink="route('product.detail', $product->kode_barang)"
+        :totalTerjual="$product->total_terjual"
+    />
+@empty
+    <p class="text-gray-500">Produk terlaris belum tersedia.</p>
+@endforelse
+
     </div>
 </section>
+
 
 
 

@@ -166,8 +166,29 @@ public function pesanan()
 {
     $userId = Auth::guard('pelanggan')->id();
 
+    // Ambil semua pesanan berdasarkan status, urutkan terbaru di atas
+    $orders = [
+        'dikemas' => Order::where('pelanggan_id', $userId)
+                          ->where('status', 'dikemas')
+                          ->orderBy('created_at', 'desc')
+                          ->get(),
+        'dikirim' => Order::where('pelanggan_id', $userId)
+                          ->where('status', 'dikirim')
+                          ->orderBy('created_at', 'desc')
+                          ->get(),
+        'selesai' => Order::where('pelanggan_id', $userId)
+                          ->where('status', 'selesai')
+                          ->orderBy('created_at', 'desc')
+                          ->get(),
+        'dibatalkan' => Order::where('pelanggan_id', $userId)
+                             ->where('status', 'batal')
+                             ->orderBy('created_at', 'desc')
+                             ->get(),
+    ];
+
     $pesananBelumBayar = Order::where('pelanggan_id', $userId)
                             ->where('status', 'pending')
+                            ->orderBy('created_at', 'desc')
                             ->get();
 
     $orderIds = $pesananBelumBayar->pluck('order_id');
@@ -176,6 +197,7 @@ public function pesanan()
     $countItemBelumBayar = OrderItem::whereIn('order_id', $orderIds)->count();
 
     return view('orders.pesanan', compact(
+        'orders',
         'pesananBelumBayar',
         'countItemBelumBayar'
     ));

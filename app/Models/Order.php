@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = 'orders'; // penting!
-    protected $primaryKey = 'order_id';
+    // protected $primaryKey = 'order_id'; // Hapus ini, gunakan default 'id'
 
     protected $fillable = [
+        'order_id', // Tambahkan ini
         'pelanggan_id',
         'nama_penerima',
         'alamat',
         'metode_pembayaran',
         'status',
         'total',
-        'midtrans_order_id'
+        'midtrans_order_id',
+        'telepon' // Tambahkan jika belum ada
     ];
 
     // RELASI KE PELANGGAN

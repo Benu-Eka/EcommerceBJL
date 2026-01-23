@@ -57,4 +57,6 @@ class ProductController extends Controller
 
         return view('products.detail', compact('product', 'related'));
     }
+
+    
 }

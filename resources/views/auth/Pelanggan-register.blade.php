@@ -14,9 +14,9 @@
             <div class="hidden md:flex md:w-1/3 p-8 flex-col justify-center items-center text-center bg-white border-r border-red-50">
                 <div class="mb-6">
                     <h1 class="text-xl font-black text-red-600 tracking-tight leading-tight uppercase">
-                        Toko Fanjaya <br> Mulia Abadi
+                        Toko <br> Berkah Jaya Lumintu
                     </h1>
-                    <p class="text-gray-500 mt-1 text-xs font-medium">Mitra Bisnis Terpercaya Anda</p>
+                    <p class="text-gray-500 mt-1 text-xs font-medium">Solusi Belanja Terpercaya Anda</p>
                 </div>
 
                 <div class="relative w-full max-w-[180px] transition-transform hover:scale-105 duration-500">
