@@ -27,6 +27,9 @@
                 <button data-tab="tab-belum-bayar" class="tab-btn active px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Belum Bayar
                 </button>
+                <button data-tab="tab-dibayar" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                    Dibayar
+                </button>
                 <button data-tab="tab-dikemas" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
                     Dikemas
                 </button>
@@ -47,6 +50,18 @@
             {{-- BELUM BAYAR --}}
             <div id="tab-belum-bayar" class="tab-panel animate-fadeIn">
                 @forelse ($pesananBelumBayar ?? [] as $order)
+                    @include('components.order-card', ['order' => $order])
+                @empty
+                    <div class="text-center py-20 bg-white rounded-[3rem] border border-dashed border-gray-200">
+                        <img src="https://cdn-icons-png.flaticon.com/512/10522/10522166.png" class="w-20 h-20 mx-auto opacity-20 mb-4" alt="empty">
+                        <p class="text-gray-400 font-medium">Tidak ada pesanan yang menunggu pembayaran.</p>
+                    </div>
+                @endforelse
+            </div>
+
+            {{-- DIBAYAR --}}
+            <div id="tab-dibayar" class="tab-panel animate-fadeIn">
+                @forelse ($orders['dibayar'] ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
                     <div class="text-center py-20 bg-white rounded-[3rem] border border-dashed border-gray-200">
@@ -132,35 +147,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const panels = document.querySelectorAll('.tab-panel');
 
     function activate(tabBtn) {
-        // Reset semua tab
+        // reset tab
         tabs.forEach(b => {
             b.classList.remove('active', 'text-white');
             b.classList.add('text-gray-500');
         });
 
-        // Aktifkan tab terpilih
+        // reset panel
+        panels.forEach(p => p.classList.add('hidden'));
+
+        // aktifkan tab
         tabBtn.classList.add('active', 'text-white');
         tabBtn.classList.remove('text-gray-500');
 
-        // Sembunyikan semua panel
-        panels.forEach(p => p.classList.add('hidden'));
-
-        // Tampilkan panel yang sesuai
-        const id = tabBtn.getAttribute('data-tab');
-        const targetPanel = document.getElementById(id);
-        if (targetPanel) {
-            targetPanel.classList.remove('hidden');
-        }
+        // tampilkan panel sesuai data-tab
+        const id = tabBtn.dataset.tab;
+        document.getElementById(id)?.classList.remove('hidden');
     }
 
     tabs.forEach(btn => {
-        btn.addEventListener('click', () => activate(btn));
+        btn.addEventListener('click', function () {
+            activate(this);
+        });
     });
 
-    // Inisialisasi tab pertama jika ada
-    if (tabs.length > 0) {
-        activate(tabs[0]);
-    }
+    const activeTab = document.querySelector('.tab-btn.active');
+    activate(activeTab ?? tabs[0]);
 });
 </script>
+
 @endsection

@@ -2,9 +2,13 @@
     <div class="flex flex-col sm:flex-row items-start gap-4">
         {{-- Gambar produk --}}
         <div class="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 border border-gray-200">
-            <svg class="w-full h-full text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M7 19h10V4H7v15zm-5-2h4V6H2v11zM18 6v11h4V6h-4z"/>
-            </svg>
+            @php
+                $firstItem = $order->items->first();
+                $image = $firstItem && $firstItem->barang && $firstItem->barang->foto_produk
+                    ? asset('build/assets/' . $firstItem->barang->foto_produk)
+                    : 'https://via.placeholder.com/80x80?text=Produk';
+            @endphp
+            <img src="{{$image }}" alt="Gambar Produk" class="w-full h-full object-cover">
         </div>
 
         {{-- Detail pesanan utama --}}
@@ -12,7 +16,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-3 mb-3">
                 {{-- Info Dasar --}}
                 <div class="mb-2 sm:mb-0">
-                    <h3 class="text-gray-800 font-bold text-lg leading-tight">{{ $order['midtrans_order_id'] ?? 'Order ID Tidak Tersedia' }}</h3>
+                    <h3 class="text-gray-800 font-bold text-lg leading-tight">{{ $order['order_id'] ?? 'Order ID Tidak Tersedia' }}</h3>
                     <p class="text-gray-500 text-sm mt-1">
                         <span class="font-medium text-gray-600">{{ $order->items()->count() }}</span> Produk
                         <span class="mx-2 text-gray-300">|</span>
@@ -26,6 +30,8 @@
                         $status = strtolower($order['status'] ?? 'pending');
                         if ($status === 'belum_bayar') {
                             echo 'text-yellow-700 bg-yellow-100';
+                        } elseif ($status === 'dibayar') {
+                            echo 'text-green-700 bg-green-100';
                         } elseif (in_array($status, ['dikirim', 'diproses'])) {
                             echo 'text-blue-700 bg-blue-100';
                         } elseif ($status === 'selesai') {

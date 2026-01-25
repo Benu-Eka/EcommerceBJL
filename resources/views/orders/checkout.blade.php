@@ -143,6 +143,7 @@
 {{-- Scripts tetap sama seperti fungsionalitas Anda --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
 @if (session('success'))
 <script>
 Swal.fire({
@@ -170,11 +171,11 @@ Swal.fire({
 <script>
 document.getElementById('pay-button').addEventListener('click', function () {
     let form = document.getElementById('checkout-form');
-    let data = new FormData(form);
+    let formData = new FormData(form);
+    let button = this;
 
-    // Efek loading saat klik
-    this.innerHTML = "Memproses...";
-    this.disabled = true;
+    button.innerHTML = "Memproses...";
+    button.disabled = true;
 
     fetch("{{ route('orders.pay') }}", {
         method: "POST",
@@ -182,31 +183,42 @@ document.getElementById('pay-button').addEventListener('click', function () {
             "X-CSRF-TOKEN": "{{ csrf_token() }}",
             "Accept": "application/json"
         },
-        body: data
+        body: formData
     })
     .then(res => res.json())
     .then(data => {
-        if (!data.snap_token) {
-            Swal.fire('Error', 'Gagal mendapatkan token pembayaran', 'error');
-            this.innerHTML = "Bayar Sekarang";
-            this.disabled = false;
+
+        if (!data.snap_token || !data.order_id) {
+            Swal.fire('Error', 'Gagal memproses pembayaran', 'error');
+            button.innerHTML = "Bayar Sekarang";
+            button.disabled = false;
             return;
         }
 
+        const orderId = data.order_id;
+
         snap.pay(data.snap_token, {
-            onSuccess: (result) => { window.location.href = "{{ route('orders.success') }}"; },
-            onPending: (result) => { window.location.href = "{{ route('orders.pending') }}"; },
-            onError: (result) => { window.location.href = "{{ route('orders.failed') }}"; },
-            onClose: () => { 
-                this.innerHTML = "Bayar Sekarang";
-                this.disabled = false;
+            onSuccess: function () {
+                window.location.href = `/orders/success/${orderId}`;
+            },
+            onPending: function () {
+                window.location.href = `/orders/pending/${orderId}`;
+            },
+            onError: function () {
+                window.location.href = `/orders/failed/${orderId}`;
+            },
+            onClose: function () {
+                button.innerHTML = "Bayar Sekarang";
+                button.disabled = false;
             }
         });
     })
-    .catch(err => {
-        this.innerHTML = "Bayar Sekarang";
-        this.disabled = false;
+    .catch(() => {
+        button.innerHTML = "Bayar Sekarang";
+        button.disabled = false;
+        Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
     });
 });
 </script>
+
 @endsection

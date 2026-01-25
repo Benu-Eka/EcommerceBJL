@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $table = 'orders'; // penting!
-    // protected $primaryKey = 'order_id'; // Hapus ini, gunakan default 'id'
-
+    protected $primaryKey = 'order_id';
+    public $incrementing = false; // karena order_id bukan auto-increment
+    protected $keyType = 'string';
     protected $fillable = [
-        'order_id', // Tambahkan ini
+        'order_id', 
         'pelanggan_id',
         'nama_penerima',
         'alamat',

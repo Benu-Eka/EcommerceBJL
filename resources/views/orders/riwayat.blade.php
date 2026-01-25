@@ -29,12 +29,12 @@
                         {{-- Gambar produk pertama --}}
                         @php
                             $firstItem = $order->items->first();
-                            $image = $firstItem && $firstItem->barang->gambar
+                            $image = $firstItem && $firstItem->barang->foto_produk
                                 ? asset('storage/' . $firstItem->barang->gambar)
                                 : 'https://via.placeholder.com/80x80?text=Produk';
                         @endphp
 
-                        <img src="{{ $image }}" class="w-16 h-16 rounded-lg object-cover">
+                        <img src="{{ asset('build/assets/' . $image) }}" class="w-16 h-16 rounded-lg object-cover">
 
                         <div>
                             <h2 class="font-semibold text-gray-800">
@@ -61,10 +61,10 @@
                             Rp {{ number_format($order->total, 0, ',', '.') }}
                         </p>
 
-                        <a href="{{ route('orders.show', $order->order_id) }}"
-                            class="mt-2 block text-sm text-red-600 font-medium hover:text-red-800">
-                            Lihat Detail
-                        </a>
+                    <a href="{{ route('orders.show', $order->order_id) }}">
+                        Lihat Detail
+                    </a>
+
                     </div>
                 </div>
             @empty

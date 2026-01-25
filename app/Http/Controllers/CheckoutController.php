@@ -18,6 +18,7 @@ class CheckoutController extends Controller
      *  =========================*/
     public function showCheckout()
     {
+        
         $pelanggan = Auth::guard('pelanggan')->user();
 
         if (!$pelanggan) {
@@ -47,70 +48,66 @@ class CheckoutController extends Controller
     /** =========================
      *  PROSES ORDER + MIDTRANS
      *  =========================*/
-    public function process(Request $request)
-    {
-        $pelanggan = Auth::guard('pelanggan')->user();
+public function process(Request $request)
+{
+    $pelanggan = Auth::guard('pelanggan')->user();
+    $cartItems = $pelanggan->cartItems()->with('barang')->get();
 
-        $cartItems = $pelanggan->cartItems()->with('barang')->get();
+    if ($cartItems->isEmpty()) {
+        return response()->json(['error' => 'Keranjang kosong'], 400);
+    }
 
-        if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Keranjang masih kosong');
-        }
+    $subtotal = $cartItems->sum(fn($i) => $i->barang->harga_jual * $i->jumlah);
+    $biayaPengiriman = 5000;
+    $diskon = $subtotal * 0.10;
+    $totalBayar = $subtotal - $diskon + $biayaPengiriman;
 
-        $subtotal = $cartItems->sum(fn($i) => $i->barang->harga_jual * $i->jumlah);
+    $order = Order::create([
+        'pelanggan_id'   => $pelanggan->pelanggan_id,
+        'nama_penerima'  => $request->nama_penerima,
+        'alamat'         => $request->alamat,
+        'status'         => 'pending',
+        'total'          => $totalBayar
+    ]);
 
-        // Simpan ORDER
-        $order = Order::create(
-            [
-            'pelanggan_id' => $pelanggan->pelanggan_id,
-            'nama_penerima' => $request->nama_penerima,
-            'alamat' => $request->alamat,
-            'status' => 'pending',
-            'total' => $subtotal
-        ]);
-
-            \Log::info("ORDER INSERTED", [$order]);
-
-
-        foreach ($cartItems as $item) {
-            OrderItem::create([
-                'order_id' => $order->order_id,
-                'kode_barang' => $item->kode_barang,
-                'quantity' => $item->jumlah,
-                'harga_satuan' => $item->barang->harga_jual,
-            ]);
-        }
-
-        // Midtrans Setup
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-
-        $midtransParams = [
-            'transaction_details' => [
-                'order_id' => 'ORDER-' . $order->order_id . '-' . time(),
-                'gross_amount' => intval($order->total)
-            ],
-            'customer_details' => [
-                'first_name' => $pelanggan->nama_pelanggan,
-                'email' => $pelanggan->email,
-                'phone' => $pelanggan->telepon ?? '-'
-            ]
-        ];
-
-\Log::info("MIDTRANS PARAMS", $midtransParams);
-        $snapToken = Snap::getSnapToken($midtransParams);
-
-        $order->update([
-            'midtrans_order_id' => $midtransParams['transaction_details']['order_id']
-        ]);
-
-        return response()->json([
-            'snap_token' => $snapToken,
-            'order_id'   => $order->order_id
+    foreach ($cartItems as $item) {
+        OrderItem::create([
+            'order_id'      => $order->order_id,
+            'kode_barang'   => $item->kode_barang,
+            'quantity'      => $item->jumlah,
+            'harga_satuan'  => $item->barang->harga_jual,
         ]);
     }
+
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production', false);
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
+
+    $midtransParams = [
+        'transaction_details' => [
+            'order_id'      => 'ORDER-' . $order->order_id . '-' . time(),
+            'gross_amount' => (int) $totalBayar
+        ],
+        'customer_details' => [
+            'first_name' => $pelanggan->nama_pelanggan,
+            'email'      => $pelanggan->email,
+            'phone'      => $pelanggan->telepon ?? '-'
+        ]
+    ];
+
+    $snapToken = Snap::getSnapToken($midtransParams);
+
+    $order->update([
+        'midtrans_order_id' => $midtransParams['transaction_details']['order_id']
+    ]);
+
+    return response()->json([
+        'snap_token'         => $snapToken,
+        'order_id'           => $order->order_id,
+        'midtrans_order_id'  => $order->midtrans_order_id
+    ]);
+}
 
 
     /** =========================
