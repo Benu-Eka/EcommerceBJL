@@ -64,6 +64,9 @@ class OrderController extends Controller
         ]);
     }
 
+    // KOSONGKAN KERANJANG SETELAH CHECKOUT BERHASIL
+    $pelanggan->cartItems()->delete();
+
     Config::$serverKey = config('midtrans.server_key');
     Config::$isProduction = config('midtrans.is_production');
     Config::$isSanitized = true;
@@ -289,7 +292,7 @@ public function riwayat()
     $userId = Auth::guard('pelanggan')->id();
 
     $orders = Order::where('pelanggan_id', $userId)
-        ->withCount('items')
+        ->with('items.barang')
         ->orderBy('created_at', 'desc')
         ->get();
 

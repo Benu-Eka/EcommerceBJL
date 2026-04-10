@@ -24,7 +24,7 @@
             {{-- KOLOM KIRI: FILTER (SIDEBAR) --}}
             <aside class="w-full lg:w-1/4">
                 <div class="sticky top-24">
-                    <x-sidebar-filter /> 
+                    <x-sidebar-filter :categories="$categories" /> 
                 </div>
             </aside>
 
@@ -51,6 +51,17 @@
                     <form action="{{ route('product') }}" method="GET" id="sort-form" class="relative group">
                         @if(request('q')) 
                             <input type="hidden" name="q" value="{{ request('q') }}">
+                        @endif
+                        @if(is_array(request('kategori')))
+                            @foreach(request('kategori') as $kat)
+                                <input type="hidden" name="kategori[]" value="{{ $kat }}">
+                            @endforeach
+                        @endif
+                        @if(request('harga_min'))
+                            <input type="hidden" name="harga_min" value="{{ request('harga_min') }}">
+                        @endif
+                        @if(request('harga_max'))
+                            <input type="hidden" name="harga_max" value="{{ request('harga_max') }}">
                         @endif
                         <select name="sort" id="sort" onchange="this.form.submit()"
                             class="appearance-none bg-gray-50 border-none rounded-2xl py-3 pl-5 pr-12 text-sm font-bold text-gray-700 focus:ring-4 focus:ring-red-50 transition-all cursor-pointer">
@@ -97,7 +108,7 @@
                 {{-- PAGINATION --}}
                 <div class="mt-16 flex justify-center">
                     <div class="bg-white px-6 py-4 rounded-3xl shadow-sm border border-gray-100">
-                        {{ $products->appends(['q' => request('q'), 'sort' => request('sort')])->links() }}
+                        {{ $products->appends(['q' => request('q'), 'sort' => request('sort'), 'kategori' => request('kategori'), 'harga_min' => request('harga_min'), 'harga_max' => request('harga_max')])->links() }}
                     </div>
                 </div>
                 

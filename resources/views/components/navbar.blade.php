@@ -52,8 +52,8 @@
                 {{-- 3. KANAN: Nav Kanan & Ikon --}}
                 <div class="flex-1 flex items-center justify-end">
                     <nav class="hidden md:flex items-center space-x-4 xl:space-x-6 flex-1 justify-start ml-4">
-                        <a href="/pesanan" class="text-xs xl:text-sm font-bold uppercase tracking-widest transition-all {{ $current == 'pesanan' ? 'text-white border-b-2 border-white' : 'text-red-100 hover:text-white' }} py-1">Transaksi</a>
-                        <a href="/riwayat" class="text-xs xl:text-sm font-bold uppercase tracking-widest transition-all {{ $current == 'riwayat' ? 'text-white border-b-2 border-white' : 'text-red-100 hover:text-white' }} py-1">Riwayat</a>
+                        <a href="{{ route('orders.pesanan') }}" class="text-xs xl:text-sm font-bold uppercase tracking-widest transition-all {{ $current == 'pesanan' ? 'text-white border-b-2 border-white' : 'text-red-100 hover:text-white' }} py-1">Transaksi</a>
+                        <a href="{{ route('orders.riwayat') }}" class="text-xs xl:text-sm font-bold uppercase tracking-widest transition-all {{ $current == 'riwayat' ? 'text-white border-b-2 border-white' : 'text-red-100 hover:text-white' }} py-1">Riwayat</a>
                     </nav>
 
                     {{-- Ikon Grup (Selalu tampil) --}}
@@ -97,8 +97,8 @@
             <nav class="flex flex-col space-y-3">
                 <a href="/home" class="text-white font-bold uppercase tracking-widest text-sm {{ $current == 'home' ? 'text-white' : 'text-red-200' }}">Home</a>
                 <a href="/product" class="text-white font-bold uppercase tracking-widest text-sm {{ $current == 'product' ? 'text-white' : 'text-red-200' }}">Produk</a>
-                <a href="/pesanan" class="text-white font-bold uppercase tracking-widest text-sm {{ $current == 'pesanan' ? 'text-white' : 'text-red-200' }}">Transaksi</a>
-                <a href="/riwayat" class="text-white font-bold uppercase tracking-widest text-sm {{ $current == 'riwayat' ? 'text-white' : 'text-red-200' }}">Riwayat</a>
+                <a href="{{ route('orders.pesanan') }}" class="text-white font-bold uppercase tracking-widest text-sm {{ $current == 'pesanan' ? 'text-white' : 'text-red-200' }}">Transaksi</a>
+                <a href="{{ route('orders.riwayat') }}" class="text-white font-bold uppercase tracking-widest text-sm {{ $current == 'riwayat' ? 'text-white' : 'text-red-200' }}">Riwayat</a>
             </nav>
         </div>
     </div>
