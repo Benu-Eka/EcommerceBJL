@@ -20,6 +20,7 @@ class Pelanggan extends Authenticatable
         'kategori_pelanggan_id',
         'email',
         'password',
+        'saldo',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -34,9 +35,14 @@ class Pelanggan extends Authenticatable
         return $this->belongsTo(KategoriPelanggan::class, 'kategori_pelanggan_id', 'kategori_pelanggan_id');
     }
 
-public function cartItems()
-{
-    return $this->hasMany(\App\Models\Cart::class, 'pelanggan_id');
-}
+    public function cartItems()
+    {
+        return $this->hasMany(\App\Models\Cart::class, 'pelanggan_id');
+    }
+
+    public function saldoTransactions()
+    {
+        return $this->hasMany(SaldoTransaction::class, 'pelanggan_id', 'pelanggan_id');
+    }
     
 }

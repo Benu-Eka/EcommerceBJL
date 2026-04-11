@@ -111,6 +111,38 @@
         </div>
     </div>
 
+    {{-- Saldo Card --}}
+    <div class="max-w-4xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div class="bg-gradient-to-br from-red-600 via-red-700 to-red-900 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full border-4 border-white"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full border-4 border-white"></div>
+            </div>
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                            </svg>
+                        </div>
+                        <p class="text-sm text-red-100 font-medium">Saldo Anda</p>
+                    </div>
+                    <p class="text-3xl md:text-4xl font-black tracking-tight">
+                        Rp {{ number_format($pelanggan->saldo ?? 0, 0, ',', '.') }}
+                    </p>
+                </div>
+                <a href="{{ route('orders.saldo') }}" 
+                   class="inline-flex items-center justify-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white font-bold text-sm px-6 py-3 rounded-2xl transition-all border border-white/20">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    Lihat Riwayat Saldo
+                </a>
+            </div>
+        </div>
+    </div>
+
     <x-footer />
 </div>
 @endsection

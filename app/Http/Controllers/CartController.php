@@ -22,7 +22,13 @@ class CartController extends Controller
             return $harga * ($item->jumlah ?? 0);
         });
 
-        return view('chart.index', compact('cartItems', 'subtotal'));
+        // Ambil diskon berdasarkan kategori pelanggan
+        $pelanggan = Auth::guard('pelanggan')->user();
+        $pelanggan->load('kategoriPelanggan');
+        $kategoriNama = $pelanggan->kategoriPelanggan->kategori_pelanggan ?? '-';
+        $diskonPersen = (float) ($pelanggan->kategoriPelanggan->jumlah_diskon ?? 0);
+
+        return view('chart.index', compact('cartItems', 'subtotal', 'diskonPersen', 'kategoriNama'));
     }
 
     //     public function add(Request $request)

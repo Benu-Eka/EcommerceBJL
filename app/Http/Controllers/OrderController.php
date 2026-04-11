@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\SaldoTransaction;
 use Illuminate\Http\Request;
 use App\Models\SuratJalan;
 use App\Models\SuratJalanDetail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Midtrans\Config;
@@ -29,6 +31,7 @@ class OrderController extends Controller
     ]);
 
     $pelanggan = Auth::guard('pelanggan')->user();
+    $pelanggan->load('kategoriPelanggan');
     $cartItems = $pelanggan->cartItems()->with('barang')->get();
 
     if ($cartItems->isEmpty()) {
@@ -37,9 +40,12 @@ class OrderController extends Controller
         ], 400);
     }
 
+    // Diskon dinamis berdasarkan kategori pelanggan
+    $diskonPersen = (float) ($pelanggan->kategoriPelanggan->jumlah_diskon ?? 0);
+
     $subtotal = $cartItems->sum(fn ($i) => $i->barang->harga_jual * $i->jumlah);
     $biayaPengiriman = 5000;
-    $diskon = $subtotal * 0.10;
+    $diskon = $subtotal * ($diskonPersen / 100);
     $totalBayar = (int) ($subtotal - $diskon + $biayaPengiriman); // 🔥 CAST INT
 
     $order_id = "ORD-" . now()->format('Ymd') . "-" . strtoupper(Str::random(6));
@@ -67,6 +73,65 @@ class OrderController extends Controller
     // KOSONGKAN KERANJANG SETELAH CHECKOUT BERHASIL
     $pelanggan->cartItems()->delete();
 
+    // PROSES PEMBAYARAN SALDO
+    if ($request->pembayaran === 'saldo') {
+        if ($pelanggan->saldo < $totalBayar) {
+            return response()->json(['error' => 'Saldo tidak mencukupi'], 400);
+        }
+
+        DB::transaction(function () use ($order, $pelanggan, $totalBayar) {
+            $saldoSebelum = (float) $pelanggan->saldo;
+            $saldoSesudah = $saldoSebelum - $totalBayar;
+
+            $pelanggan->saldo = $saldoSesudah;
+            $pelanggan->save();
+
+            SaldoTransaction::create([
+                'pelanggan_id' => $pelanggan->pelanggan_id,
+                'order_id' => $order->order_id,
+                'tipe' => 'penggunaan',
+                'jumlah' => $totalBayar,
+                'saldo_sebelum' => $saldoSebelum,
+                'saldo_sesudah' => $saldoSesudah,
+                'keterangan' => 'Pembayaran pesanan ' . $order->order_id,
+            ]);
+
+            $order->status = 'dibayar';
+            $order->save();
+
+            // Buat Surat Jalan
+            $sj_id = "SJ-" . now()->format('Ymd') . "-" . strtoupper(Str::random(5));
+            SuratJalan::create([
+                'sj_id' => $sj_id,
+                'user_id' => \App\Models\User::first()->user_id ?? '', // Ambil admin pertama
+                'pelanggan_id' => $order->pelanggan_id,
+                'tanggal_surat' => now(),
+                'status' => 'Disetujui',
+                'biaya_pengiriman' => 0, // HARUS ADA
+                'diskon_pelanggan' => 0, // HARUS ADA
+                'subtotal' => $order->total
+            ]);
+
+            foreach ($order->items as $item) {
+                SuratJalanDetail::create([
+                    'detail_sj_id' => 'SJD-' . strtoupper(Str::random(6)),
+                    'sj_id' => $sj_id,
+                    'kode_barang' => $item->kode_barang,
+                    'quantity' => $item->quantity,
+                    'harga_satuan' => $item->harga_satuan,
+                    'satuan' => 'pcs' // HARUS ADA
+                ]);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'type' => 'saldo',
+            'order_id' => $order->order_id
+        ]);
+    }
+
+    // PROSES PEMBAYARAN MIDTRANS
     Config::$serverKey = config('midtrans.server_key');
     Config::$isProduction = config('midtrans.is_production');
     Config::$isSanitized = true;
@@ -123,9 +188,12 @@ public function callback(Request $request)
 
         SuratJalan::create([
             'sj_id' => $sj_id,
+            'user_id' => \App\Models\User::first()->user_id ?? '', // Ambil admin pertama
             'pelanggan_id' => $order->pelanggan_id,
             'tanggal_surat' => now(),
             'status' => 'Disetujui',
+            'biaya_pengiriman' => 0, // HARUS ADA
+            'diskon_pelanggan' => 0, // HARUS ADA
             'subtotal' => $order->total
         ]);
 
@@ -136,6 +204,7 @@ public function callback(Request $request)
                 'kode_barang' => $item->kode_barang,
                 'quantity' => $item->quantity,
                 'harga_satuan' => $item->harga_satuan,
+                'satuan' => 'pcs' // HARUS ADA
             ]);
         }
 
@@ -166,7 +235,7 @@ public function success($order_id)
         $order->save();
     }
 
-    return redirect()->route('orders.show', $order_id)
+    return redirect()->route('orders.pesanan', ['tab' => 'dibayar'])
                      ->with('success', 'Pembayaran berhasil! Surat jalan sedang diproses.');
 }
 
@@ -180,45 +249,55 @@ public function failed()
     return view('orders.failed')->with('message', 'Pembayaran gagal atau dibatalkan.');
 }
 
-public function pesanan()
+public function pesanan(Request $request)
 {
     $userId = Auth::guard('pelanggan')->id();
 
     $orders = [
         'dikemas' => Order::where('pelanggan_id', $userId)
             ->where('status', 'dikemas')
+            ->with('items.barang')
             ->latest()
             ->get(),
 
         'dibayar' => Order::where('pelanggan_id', $userId)
             ->where('status', 'dibayar')
+            ->with('items.barang')
             ->latest()
             ->get(),
 
         'dikirim' => Order::where('pelanggan_id', $userId)
             ->where('status', 'dikirim')
+            ->with('items.barang')
             ->latest()
             ->get(),
 
         'selesai' => Order::where('pelanggan_id', $userId)
             ->where('status', 'selesai')
+            ->with('items.barang')
             ->latest()
             ->get(),
 
         'dibatalkan' => Order::where('pelanggan_id', $userId)
             ->where('status', 'batal')
+            ->with('items.barang')
             ->latest()
             ->get(),
     ];
 
     $pesananBelumBayar = Order::where('pelanggan_id', $userId)
         ->where('status', 'pending')
+        ->with('items.barang')
         ->latest()
         ->get();
 
+    // Tab aktif dari query parameter (untuk navigasi dari submenu navbar)
+    $activeTab = $request->query('tab', 'belum-bayar');
+
     return view('orders.pesanan', compact(
         'orders',
-        'pesananBelumBayar'
+        'pesananBelumBayar',
+        'activeTab'
     ));
 }
 
@@ -291,12 +370,91 @@ public function riwayat()
 {
     $userId = Auth::guard('pelanggan')->id();
 
+    // Hanya tampilkan pesanan yang sudah selesai
     $orders = Order::where('pelanggan_id', $userId)
+        ->where('status', 'selesai')
         ->with('items.barang')
         ->orderBy('created_at', 'desc')
         ->get();
 
-    return view('orders.riwayat', compact('orders'));
+    // Bangun rekomendasi repeat order dari riwayat pembelian
+    // Kumpulkan semua barang yang pernah dibeli, urutkan berdasarkan frekuensi
+    $rekomendasiProduk = collect();
+    foreach ($orders as $order) {
+        foreach ($order->items as $item) {
+            if ($item->barang) {
+                $key = $item->kode_barang;
+                if ($rekomendasiProduk->has($key)) {
+                    $existing = $rekomendasiProduk->get($key);
+                    $existing['total_qty'] += $item->quantity;
+                    $existing['total_order'] += 1;
+                    $rekomendasiProduk->put($key, $existing);
+                } else {
+                    $rekomendasiProduk->put($key, [
+                        'barang' => $item->barang,
+                        'nama_barang' => $item->nama_barang ?? $item->barang->nama_barang,
+                        'total_qty' => $item->quantity,
+                        'total_order' => 1,
+                        'last_ordered' => $order->created_at,
+                    ]);
+                }
+            }
+        }
+    }
+
+    // Urutkan berdasarkan frekuensi pembelian (terbanyak dulu)
+    $rekomendasiProduk = $rekomendasiProduk->sortByDesc('total_order')->values();
+
+    return view('orders.riwayat', compact('orders', 'rekomendasiProduk'));
+}
+
+public function confirmReceived($orderId)
+{
+    $userId = Auth::guard('pelanggan')->id();
+
+    $order = Order::where('order_id', $orderId)
+        ->where('pelanggan_id', $userId)
+        ->where('status', 'dikirim')
+        ->firstOrFail();
+
+    $order->status = 'selesai';
+    $order->save();
+
+    return redirect()->route('orders.pesanan', ['tab' => 'selesai'])
+        ->with('success', 'Pesanan berhasil dikonfirmasi sebagai diterima!');
+}
+
+public function cancelOrder($orderId)
+{
+    $pelanggan = Auth::guard('pelanggan')->user();
+
+    $order = Order::where('order_id', $orderId)
+        ->where('pelanggan_id', $pelanggan->pelanggan_id)
+        ->whereIn('status', ['pending', 'dibayar'])
+        ->firstOrFail();
+
+    // Jika pending, langsung batalkan saja tanpa perlu persetujuan admin karena belum ada dana masuk
+    if ($order->status === 'pending') {
+        $order->status = 'batal';
+        $order->save();
+        return redirect()->back()->with('success', 'Pesanan belum dibayar berhasil dibatalkan.');
+    }
+
+    // Jika sudah dibayar, ajukan pembatalan ke admin
+    $order->cancel_requested = 1;
+    $order->save();
+
+    return redirect()->back()->with('success', 'Pengajuan pembatalan telah dikirim. Menunggu konfirmasi admin untuk memproses refund.');
+}
+
+public function saldoPage()
+{
+    $pelanggan = Auth::guard('pelanggan')->user();
+    $transactions = SaldoTransaction::where('pelanggan_id', $pelanggan->pelanggan_id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('orders.saldo', compact('pelanggan', 'transactions'));
 }
 
 

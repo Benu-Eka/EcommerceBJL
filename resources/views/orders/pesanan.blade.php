@@ -21,25 +21,37 @@
             <p class="text-gray-500 text-sm mt-1">Pantau status pengiriman dan riwayat belanja Anda.</p>
         </div>
 
+        {{-- Alert Messages --}}
+        @if(session('success'))
+            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm font-medium">
+                ✅ {{ session('success') }}
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
+                ❌ {{ session('error') }}
+            </div>
+        @endif
+
         {{-- Tabs Navigation (Modern Pill Style) --}}
         <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-2 mb-8 overflow-x-auto custom-scrollbar">
             <div class="flex flex-nowrap md:flex-wrap gap-1 min-w-max">
-                <button data-tab="tab-belum-bayar" class="tab-btn active px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
+                <button data-tab="tab-belum-bayar" class="tab-btn {{ ($activeTab ?? 'belum-bayar') == 'belum-bayar' ? 'active' : 'text-gray-500 hover:bg-gray-50' }} px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Belum Bayar
                 </button>
-                <button data-tab="tab-dibayar" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                <button data-tab="tab-dibayar" class="tab-btn {{ ($activeTab ?? '') == 'dibayar' ? 'active' : 'text-gray-500 hover:bg-gray-50' }} px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Dibayar
                 </button>
-                <button data-tab="tab-dikemas" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                <button data-tab="tab-dikemas" class="tab-btn {{ ($activeTab ?? '') == 'dikemas' ? 'active' : 'text-gray-500 hover:bg-gray-50' }} px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Dikemas
                 </button>
-                <button data-tab="tab-dikirim" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                <button data-tab="tab-dikirim" class="tab-btn {{ ($activeTab ?? '') == 'dikirim' ? 'active' : 'text-gray-500 hover:bg-gray-50' }} px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Dikirim
                 </button>
-                <button data-tab="tab-selesai" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                <button data-tab="tab-selesai" class="tab-btn {{ ($activeTab ?? '') == 'selesai' ? 'active' : 'text-gray-500 hover:bg-gray-50' }} px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Selesai
                 </button>
-                <button data-tab="tab-dibatalkan" class="tab-btn px-6 py-3 rounded-2xl text-sm font-bold text-gray-500 hover:bg-gray-50 transition-all duration-300 whitespace-nowrap">
+                <button data-tab="tab-dibatalkan" class="tab-btn {{ ($activeTab ?? '') == 'dibatalkan' ? 'active' : 'text-gray-500 hover:bg-gray-50' }} px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-300 whitespace-nowrap">
                     Dibatalkan
                 </button>
             </div>
@@ -48,7 +60,7 @@
         {{-- Panels Container --}}
         <div class="space-y-6">
             {{-- BELUM BAYAR --}}
-            <div id="tab-belum-bayar" class="tab-panel animate-fadeIn">
+            <div id="tab-belum-bayar" class="tab-panel animate-fadeIn {{ ($activeTab ?? 'belum-bayar') != 'belum-bayar' ? 'hidden' : '' }}">
                 @forelse ($pesananBelumBayar ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
@@ -60,19 +72,19 @@
             </div>
 
             {{-- DIBAYAR --}}
-            <div id="tab-dibayar" class="tab-panel animate-fadeIn">
+            <div id="tab-dibayar" class="tab-panel animate-fadeIn {{ ($activeTab ?? '') != 'dibayar' ? 'hidden' : '' }}">
                 @forelse ($orders['dibayar'] ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
                     <div class="text-center py-20 bg-white rounded-[3rem] border border-dashed border-gray-200">
                         <img src="https://cdn-icons-png.flaticon.com/512/10522/10522166.png" class="w-20 h-20 mx-auto opacity-20 mb-4" alt="empty">
-                        <p class="text-gray-400 font-medium">Tidak ada pesanan yang menunggu pembayaran.</p>
+                        <p class="text-gray-400 font-medium">Tidak ada pesanan yang sudah dibayar.</p>
                     </div>
                 @endforelse
             </div>
 
             {{-- DIKEMAS --}}
-            <div id="tab-dikemas" class="tab-panel hidden animate-fadeIn">
+            <div id="tab-dikemas" class="tab-panel animate-fadeIn {{ ($activeTab ?? '') != 'dikemas' ? 'hidden' : '' }}">
                 @forelse ($orders['dikemas'] ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
@@ -83,7 +95,7 @@
             </div>
 
             {{-- DIKIRIM --}}
-            <div id="tab-dikirim" class="tab-panel hidden animate-fadeIn">
+            <div id="tab-dikirim" class="tab-panel animate-fadeIn {{ ($activeTab ?? '') != 'dikirim' ? 'hidden' : '' }}">
                 @forelse ($orders['dikirim'] ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
@@ -94,7 +106,7 @@
             </div>
 
             {{-- SELESAI --}}
-            <div id="tab-selesai" class="tab-panel hidden animate-fadeIn">
+            <div id="tab-selesai" class="tab-panel animate-fadeIn {{ ($activeTab ?? '') != 'selesai' ? 'hidden' : '' }}">
                 @forelse ($orders['selesai'] ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
@@ -105,7 +117,7 @@
             </div>
 
             {{-- DIBATALKAN --}}
-            <div id="tab-dibatalkan" class="tab-panel hidden animate-fadeIn">
+            <div id="tab-dibatalkan" class="tab-panel animate-fadeIn {{ ($activeTab ?? '') != 'dibatalkan' ? 'hidden' : '' }}">
                 @forelse ($orders['dibatalkan'] ?? [] as $order)
                     @include('components.order-card', ['order' => $order])
                 @empty
@@ -138,9 +150,6 @@
     .custom-scrollbar::-webkit-scrollbar { height: 0px; }
 </style>
 
-@endsection
-
-@section('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tabs = document.querySelectorAll('.tab-btn');
@@ -171,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Aktifkan tab yang sudah ditandai active oleh server
     const activeTab = document.querySelector('.tab-btn.active');
     activate(activeTab ?? tabs[0]);
 });

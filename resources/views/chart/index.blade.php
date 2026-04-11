@@ -137,13 +137,23 @@
 
                     <div id="summaryList" class="space-y-3 mb-6"></div>
 
+                    {{-- Badge kategori pelanggan --}}
+                    @if($diskonPersen > 0)
+                    <div class="mb-4 px-4 py-2.5 bg-green-50 border border-green-200 rounded-2xl flex items-center gap-2">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                        </svg>
+                        <span class="text-green-700 text-xs font-bold">Member {{ $kategoriNama }} — Diskon {{ (int)$diskonPersen }}%</span>
+                    </div>
+                    @endif
+
                     <div class="space-y-3 text-sm">
                         <div class="flex justify-between">
                             <span>Subtotal</span>
                             <span id="subtotal">Rp 0</span>
                         </div>
-                        <div class="flex justify-between">
-                            <span>Diskon (10%)</span>
+                        <div class="flex justify-between text-green-600">
+                            <span>Diskon {{ $kategoriNama }} ({{ (int)$diskonPersen }}%)</span>
                             <span id="discount">- Rp 0</span>
                         </div>
                         <div class="flex justify-between">
@@ -179,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalElem = document.getElementById('totalBayar');
 
     const HANDLING = 5000;
-    const DISCOUNT = 0.1;
+    const DISCOUNT = {{ $diskonPersen }} / 100; // Diskon dinamis dari kategori pelanggan
 
     function formatRupiah(n) {
         return 'Rp ' + Math.floor(n).toLocaleString('id-ID');

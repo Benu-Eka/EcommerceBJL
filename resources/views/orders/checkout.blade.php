@@ -77,16 +77,37 @@
                             <h2 class="text-xl font-bold text-gray-800">Metode Pembayaran</h2>
                         </div>
 
-                        <label class="flex items-center justify-between p-4 bg-red-50 border-2 border-red-100 rounded-2xl cursor-pointer group transition-all">
-                            <div class="flex items-center gap-4">
-                                <input type="radio" name="pembayaran" value="midtrans" checked class="w-5 h-5 text-red-600 focus:ring-red-500 border-gray-300">
-                                <div>
-                                    <p class="font-bold text-gray-900 text-sm">Pembayaran Instan (Midtrans)</p>
-                                    <p class="text-xs text-gray-500">Virtual Account, E-Wallet, Kartu Kredit</p>
+                        <div class="space-y-4">
+                            <label class="flex items-center justify-between p-4 bg-white hover:bg-red-50 border-2 border-gray-100 hover:border-red-100 rounded-2xl cursor-pointer group transition-all">
+                                <div class="flex items-center gap-4">
+                                    <input type="radio" name="pembayaran" value="midtrans" checked class="w-5 h-5 text-red-600 focus:ring-red-500 border-gray-300">
+                                    <div>
+                                        <p class="font-bold text-gray-900 text-sm">Pembayaran Instan (Midtrans)</p>
+                                        <p class="text-xs text-gray-500">Virtual Account, E-Wallet, Kartu Kredit</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Midtrans.png" class="h-4 grayscale group-hover:grayscale-0 transition">
-                        </label>
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Midtrans.png" class="h-4 grayscale group-hover:grayscale-0 transition">
+                            </label>
+
+                            @php
+                                $saldoSufficient = ($pelanggan->saldo ?? 0) >= $totalBayar;
+                            @endphp
+                            <label class="flex items-center justify-between p-4 {{ $saldoSufficient ? 'bg-white hover:bg-red-50 border-gray-100 hover:border-red-100 cursor-pointer' : 'bg-gray-50 border-gray-100 opacity-60 cursor-not-allowed' }} border-2 rounded-2xl group transition-all">
+                                <div class="flex items-center gap-4">
+                                    <input type="radio" name="pembayaran" value="saldo" {{ $saldoSufficient ? '' : 'disabled' }} class="w-5 h-5 text-red-600 focus:ring-red-500 border-gray-300">
+                                    <div>
+                                        <p class="font-bold text-gray-900 text-sm">Saldo Akun Anda</p>
+                                        <p class="text-xs {{ $saldoSufficient ? 'text-green-600' : 'text-red-500' }} font-bold">Saldo: Rp {{ number_format($pelanggan->saldo ?? 0, 0, ',', '.') }}</p>
+                                        @if(!$saldoSufficient)
+                                            <p class="text-[10px] text-gray-500 mt-1">Saldo tidak mencukupi untuk transaksi ini.</p>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 grayscale group-hover:grayscale-0">
+                                    💰
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -102,7 +123,7 @@
                             </div>
 
                             <div class="flex justify-between text-sm text-gray-500 font-medium">
-                                <span>Diskon Member (10%)</span>
+                                <span>Diskon {{ $kategoriNama }} ({{ (int)$diskonPersen }}%)</span>
                                 <span class="text-green-600">- Rp {{ number_format($diskon, 0, ',', '.') }}</span>
                             </div>
 
@@ -188,8 +209,20 @@ document.getElementById('pay-button').addEventListener('click', function () {
     .then(res => res.json())
     .then(data => {
 
+        if (data.type === 'saldo') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Pembayaran Berhasil',
+                text: 'Pesanan berhasil dibayar menggunakan saldo.',
+                confirmButtonColor: '#dc2626'
+            }).then(() => {
+                window.location.href = "{{ route('orders.pesanan') }}?tab=dibayar";
+            });
+            return;
+        }
+
         if (!data.snap_token || !data.order_id) {
-            Swal.fire('Error', 'Gagal memproses pembayaran', 'error');
+            Swal.fire('Error', data.error || 'Gagal memproses pembayaran', 'error');
             button.innerHTML = "Bayar Sekarang";
             button.disabled = false;
             return;
@@ -202,10 +235,10 @@ document.getElementById('pay-button').addEventListener('click', function () {
                 window.location.href = `/orders/success/${orderId}`;
             },
             onPending: function () {
-                window.location.href = `/orders/pending/${orderId}`;
+                window.location.href = "{{ route('orders.pesanan') }}?tab=belum-bayar";
             },
             onError: function () {
-                window.location.href = `/orders/failed/${orderId}`;
+                window.location.href = "{{ route('orders.pesanan') }}?tab=dibatalkan";
             },
             onClose: function () {
                 button.innerHTML = "Bayar Sekarang";

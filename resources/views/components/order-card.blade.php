@@ -56,13 +56,43 @@
 
                 {{-- Tombol aksi berdasarkan status --}}
                 <div class="flex flex-col sm:flex-row gap-2">
-                    @if(($order['status'] ?? '') === 'belum_bayar')
-                        <button class="w-full sm:w-auto bg-blue-600 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow-md">Bayar Sekarang</button>
+                    @if(($order['status'] ?? '') === 'pending')
+                        <form action="{{ route('orders.cancel', $order->order_id) }}" method="POST"
+                              onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
+                            @csrf
+                            <button type="submit" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-5 py-2 rounded-lg transition shadow-md">
+                                ❌ Batalkan Pesanan
+                            </button>
+                        </form>
+                    @elseif(($order['status'] ?? '') === 'dibayar')
+                        @if($order['cancel_requested'] ?? 0)
+                            <span class="w-full sm:w-auto bg-red-100 text-red-700 text-sm font-medium px-5 py-2 rounded-lg text-center shadow-inner cursor-wait border border-red-200">
+                                ⏳ Menunggu Konfirmasi Batal
+                            </span>
+                        @else
+                            <form action="{{ route('orders.cancel', $order->order_id) }}" method="POST"
+                                  onsubmit="return confirm('Ajukan pembatalan pesanan ini ke admin? Dana akan dikembalikan ke saldo setelah disetujui.')">
+                                @csrf
+                                <button type="submit" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-5 py-2 rounded-lg transition shadow-md">
+                                    ❌ Ajukan Batal & Refund
+                                </button>
+                            </form>
+                        @endif
+                    @elseif(($order['status'] ?? '') === 'dikemas')
+                        <span class="w-full sm:w-auto bg-orange-100 text-orange-700 text-sm font-medium px-5 py-2 rounded-lg text-center">
+                            📦 Sedang Dikemas
+                        </span>
                     @elseif(($order['status'] ?? '') === 'dikirim')
-                        <button class="w-full sm:w-auto bg-green-600 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-green-700 transition shadow-md">Lacak Pesanan</button>
+                        <form action="{{ route('orders.confirmReceived', $order->order_id) }}" method="POST"
+                              onsubmit="return confirm('Konfirmasi pesanan sudah diterima?')">
+                            @csrf
+                            <button type="submit" class="w-full sm:w-auto bg-green-600 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-green-700 transition shadow-md">
+                                ✅ Konfirmasi Diterima
+                            </button>
+                        </form>
                     @elseif(($order['status'] ?? '') === 'selesai')
                         <button class="w-full sm:w-auto bg-gray-200 text-gray-700 text-sm font-medium px-5 py-2 rounded-lg cursor-default">Pesanan Selesai</button>
-                    @elseif(($order['status'] ?? '') === 'dibatalkan')
+                    @elseif(in_array($order['status'] ?? '', ['dibatalkan', 'batal']))
                         <button class="w-full sm:w-auto bg-red-100 text-red-700 text-sm font-medium px-5 py-2 rounded-lg cursor-default">Dibatalkan</button>
                     @endif
 

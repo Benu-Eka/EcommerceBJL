@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pelanggan;
+use App\Models\KategoriPelanggan;
 use Illuminate\Support\Facades\Hash;
 
 class PelangganAuthController extends Controller
@@ -43,7 +44,8 @@ class PelangganAuthController extends Controller
 
     public function showRegisterForm()
     {
-        return view('auth.pelanggan-register');
+        $kategoriPelanggan = KategoriPelanggan::orderBy('kategori_pelanggan_id')->get();
+        return view('auth.pelanggan-register', compact('kategoriPelanggan'));
     }
 
     public function register(Request $request)
@@ -55,7 +57,7 @@ class PelangganAuthController extends Controller
             'alamat' => 'required|string',
             'NPWP' => 'nullable|string|max:50',
             'PIC' => 'required|string|max:100',
-            'kategori_pelanggan_id' => 'required|integer',
+            'kategori_pelanggan_id' => 'required|integer|exists:kategori_pelanggans,kategori_pelanggan_id',
         ]);
 
         $data['password'] = Hash::make($data['password']);

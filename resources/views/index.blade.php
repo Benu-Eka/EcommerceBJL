@@ -18,14 +18,20 @@
                             <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 rounded-lg"></div>
                             <div class="relative z-10 text-white max-w-lg space-y-3">
                                 <span
-                                    class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-white/90">DISKON
-                                    HINGGA 30%</span>
-                                <h2 class="text-3xl md:text-4xl font-extrabold mb-0">Stok Bumbu Bubuk dan Rempah Pilihan
+                                    class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-white/90">
+                                    DISKON SPESIAL HARI INI
+                                </span>
+                                <h2 class="text-3xl md:text-4xl font-extrabold mb-0">
+                                    Bumbu Bubuk & Rempah Berkualitas Pilihan
                                 </h2>
+                                <p class="text-sm text-white/80">
+                                    Lengkapi kebutuhan dapur dan usaha Anda dengan produk terbaik dari kami.
+                                </p>
                                 <a href="/product"
                                     class="inline-flex items-center gap-2 bg-red-700 hover:bg-red-800 text-white font-semibold py-2 px-6 rounded-full shadow-md transition transform hover:-translate-y-0.5">
                                     BELANJA SEKARANG →
                                 </a>
+
                             </div>
                         </div>
 
@@ -35,31 +41,40 @@
                             </div>
                             <div class="relative z-10 text-white max-w-lg space-y-3">
                                 <span
-                                    class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-yellow-300">STOK
-                                    AMAN HARGA MURAH</span>
-                                <h2 class="text-3xl md:text-4xl font-extrabold mb-0">Kebutuhan Sembako untuk Grosir & Ritel
+                                    class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-yellow-300">
+                                    DISTRIBUSI CEPAT & TERPERCAYA
+                                </span>
+                                <h2 class="text-3xl md:text-4xl font-extrabold mb-0">
+                                    Tim Profesional Siap Melayani Kebutuhan Anda
                                 </h2>
+                                <p class="text-sm text-white/80">
+                                    Didukung tim berpengalaman untuk memastikan pesanan sampai tepat waktu.
+                                </p>
                                 <a href="/product"
                                     class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-semibold py-2 px-6 rounded-full shadow transition transform hover:-translate-y-0.5">
-                                    CEK SEMUA PRODUK →
+                                    LIHAT PRODUK →
                                 </a>
                             </div>
                         </div>
 
                         <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
-                            style="background-image: url('{{ asset('build/assets/images/cs.png') }}'); background-size: cover; background-position: center;">
+                            style="background-image: url('{{ asset('build/assets/images/cs.png') }}'); background-size: 80% ; background-position:  center;">
                             <div class="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-indigo-900/60 rounded-lg">
                             </div>
                             <div class="relative z-10 text-white max-w-lg space-y-3">
                                 <span
-                                    class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-yellow-300">STOK
-                                    AMAN HARGA MURAH</span>
-                                <h2 class="text-3xl md:text-4xl font-extrabold mb-0">Pelayanan Ramah Cepat dan Pengiriman
-                                    Terjamin
+                                    class="inline-block text-sm font-semibold bg-white/10 px-2 py-1 rounded text-yellow-300">
+                                    PELAYANAN TERBAIK UNTUK ANDA
+                                </span>
+                                <h2 class="text-3xl md:text-4xl font-extrabold mb-0">
+                                    Layanan Cepat, Ramah, dan Responsif
                                 </h2>
+                                <p class="text-sm text-white/80">
+                                    Tim customer service kami siap membantu setiap kebutuhan dan pertanyaan Anda.
+                                </p>
                                 <a href="/product"
                                     class="inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-slate-900 font-semibold py-2 px-6 rounded-full shadow transition transform hover:-translate-y-0.5">
-                                    CEK SEMUA PRODUK →
+                                    HUBUNGI KAMI →
                                 </a>
                             </div>
                         </div>
@@ -98,222 +113,293 @@
                 </div>
             </div>
 
-            <section class="mb-12">
-                <div class="flex justify-between items-center mb-4">
+            <section class="mb-10">
+                <div class="flex justify-between items-center mb-5">
                     <div>
-                        <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Kategori Produk</h2>
-                        <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+                        <h2 class="text-lg md:text-xl font-semibold text-gray-800">
+                            Kategori Produk
+                        </h2>
+                        <div class="w-12 h-1 bg-red-600 rounded mt-1"></div>
                     </div>
-                    <a href="/product" class="text-green-500 hover:text-green-600 font-medium flex items-center">
+
+                    <a href="/product" class="text-sm text-green-600 hover:text-green-700 font-medium">
                         Lihat Semua →
                     </a>
                 </div>
-                <div
-                    class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4 overflow-x-auto pb-4 custom-scrollbar">
+
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+
                     @foreach ($kategoris as $kategori)
-                        <a href="#"
-                            class="flex flex-col items-center p-3 rounded-xl bg-white hover:shadow-md hover:scale-105 transition transform duration-300 min-w-[100px] w-full">
-                            {{-- Placeholder Logo/Ikon --}}
-                            <div class="w-10 h-10 mb-2 rounded-full bg-red-50 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    {{-- Ikon Sederhana (Contoh: Trolley/Keranjang) --}}
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                                    </path>
-                                </svg>
+                        <a href="{{ route('product', ['kategori' => $kategori->id]) }}"
+                            class="flex flex-col items-center p-3 bg-white rounded-lg border border-gray-100 hover:shadow-md hover:-translate-y-1 transition duration-200">
+                            <!-- ICON -->
+                            <div class="w-12 h-12 flex items-center justify-center rounded-full mb-2 text-xl bg-red-50">
+                                @php
+                                    $nama = strtolower($kategori->nama_kategori_barang);
+                                @endphp
+
+                                @if(str_contains($nama, 'mie'))
+                                    🍜
+                                @elseif(str_contains($nama, 'minum'))
+                                    🥤
+                                @elseif(str_contains($nama, 'bumbu') || str_contains($nama, 'rempah'))
+                                    🌶️
+                                @elseif(str_contains($nama, 'tepung'))
+                                    🌾
+                                @elseif(str_contains($nama, 'gula'))
+                                    🍬
+                                @elseif(str_contains($nama, 'beras'))
+                                    🍚
+                                @else
+                                    🛒
+                                @endif
                             </div>
-                            <span class="text-xs text-center font-medium text-gray-700"> {{ $kategori->nama_kategori_barang }}
+
+                            <!-- TEXT -->
+                            <span class="text-xs text-center font-medium text-gray-700 leading-tight">
+                                {{ $kategori->nama_kategori_barang }}
                             </span>
+
                         </a>
                     @endforeach
+
                 </div>
             </section>
 
-            <hr class="border-gray-200 my-8">
+            <hr class="border-gray-200 my-6">
 
             {{-- REKOMENDASI UNTUK ANDA --}}
             @if($recommendations->isNotEmpty())
                 <section class="mb-12">
-                    <div class="flex justify-between items-center mb-4">
+
+                    <!-- HEADER -->
+                    <div class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-semibold text-gray-800">
+                            <h2 class="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-2">
                                 @auth('pelanggan')
-                                    <span class="text-red-600"><i class="fa-solid fa-sparkles mr-2"></i>Rekomendasi Untuk
-                                        Anda</span>
+                                    <span class="flex items-center gap-2 text-red-600">
+                                        <i class="fa-solid fa-sparkles text-sm"></i>
+                                        Rekomendasi Untuk Anda
+                                    </span>
                                 @else
-                                    <span class="text-red-600"><i class="fa-solid fa-star mr-2"></i>Pilihan Terbaik Kami</span>
+                                    <span class="flex items-center gap-2 text-red-600">
+                                        <i class="fa-solid fa-star text-sm"></i>
+                                        Pilihan Terbaik Kami
+                                    </span>
                                 @endauth
                             </h2>
-                            <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+                            <div class="w-12 h-[3px] bg-gradient-to-r from-red-600 to-red-400 rounded-full mt-2"></div>
                         </div>
+
+                        <!-- OPTIONAL BUTTON -->
+                        <a href="/product"
+                            class="text-sm font-medium text-gray-500 hover:text-red-600 transition flex items-center gap-1">
+                            Lihat Semua
+                            <span class="transition group-hover:translate-x-1">→</span>
+                        </a>
                     </div>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <!-- PRODUCT GRID -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+
                         @foreach ($recommendations as $product)
-                            <x-product-card :kodeBarang="$product->kode_barang" :name="$product->nama_barang"
-                                :price="number_format($product->harga_jual, 0, ',', '.')" :oldPrice="$product->harga_beli
+                            <div
+                                class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+
+                                <!-- PRODUCT CARD COMPONENT -->
+                                <x-product-card :kodeBarang="$product->kode_barang" :name="$product->nama_barang"
+                                    :price="number_format($product->harga_jual, 0, ',', '.')" :oldPrice="$product->harga_beli
                             ? number_format($product->harga_beli, 0, ',', '.')
                             : null" :discount="$product->diskon
                             ? 'Diskon ' . $product->diskon . '%'
-                            : null" :image="$product->foto_produk" :productLink="route('product.detail', $product->kode_barang)" :totalTerjual="null" />
+                            : null" :image="$product->foto_produk"
+                                    :productLink="route('product.detail', $product->kode_barang)" :totalTerjual="null" />
+
+                            </div>
                         @endforeach
+
                     </div>
                 </section>
-                <hr class="border-gray-200 my-8">
+
+                <hr class="border-gray-200 my-10">
             @endif
             <!-- 
-                    <section class="mb-12">
-                        <div class="flex justify-between items-center mb-4">
-                            <div>
-                                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Produk Terlaris Minggu Ini</h2>
-                                <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
-                            </div>
-                            <a href="/product" class="text-green-500 hover:text-green-600 font-medium flex items-center">
-                                Lihat Semua →
-                            </a>
-                        </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4">
-                            <div class="group transform transition hover:-translate-y-2">
-                                <x-product-card name="Garam Premium" price="5.000" oldPrice="8.000" discount="Diskon 30%" image="garam.jpg" />
-                            </div>
-                            <div class="group transform transition hover:-translate-y-2">
-                                <x-product-card name="Gula Pasir Kristal 1kg" price="17.000" image="gula-pasir.jpg" />
-                            </div>
-                            <div class="group transform transition hover:-translate-y-2">
-                                <x-product-card name="Minyak Goreng 2L" price="34.900" image="minyak-goreng.png" />
-                            </div>
-                            <div class="group transform transition hover:-translate-y-2">
-                                <x-product-card name="Kecap Manis Botol 600ml" price="23.500" image="kecap-manis.png" />
-                            </div>
-                            <div class="group transform transition hover:-translate-y-2">
-                                <x-product-card name="Tepung Terigu Serbaguna" price="12.500" image="tepung-terigu.jpg" />
-                            </div>
-                        </div>
-                    </section> -->
+                                                                                                    <section class="mb-12">
+                                                                                                        <div class="flex justify-between items-center mb-4">
+                                                                                                            <div>
+                                                                                                                <h2 class="text-xl md:text-2xl font-semibold text-gray-800">Produk Terlaris Minggu Ini</h2>
+                                                                                                                <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+                                                                                                            </div>
+                                                                                                            <a href="/product" class="text-green-500 hover:text-green-600 font-medium flex items-center">
+                                                                                                                Lihat Semua →
+                                                                                                            </a>
+                                                                                                        </div>
+                                                                                                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4">
+                                                                                                            <div class="group transform transition hover:-translate-y-2">
+                                                                                                                <x-product-card name="Garam Premium" price="5.000" oldPrice="8.000" discount="Diskon 30%" image="garam.jpg" />
+                                                                                                            </div>
+                                                                                                            <div class="group transform transition hover:-translate-y-2">
+                                                                                                                <x-product-card name="Gula Pasir Kristal 1kg" price="17.000" image="gula-pasir.jpg" />
+                                                                                                            </div>
+                                                                                                            <div class="group transform transition hover:-translate-y-2">
+                                                                                                                <x-product-card name="Minyak Goreng 2L" price="34.900" image="minyak-goreng.png" />
+                                                                                                            </div>
+                                                                                                            <div class="group transform transition hover:-translate-y-2">
+                                                                                                                <x-product-card name="Kecap Manis Botol 600ml" price="23.500" image="kecap-manis.png" />
+                                                                                                            </div>
+                                                                                                            <div class="group transform transition hover:-translate-y-2">
+                                                                                                                <x-product-card name="Tepung Terigu Serbaguna" price="12.500" image="tepung-terigu.jpg" />
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </section> -->
             <section class="mb-12">
-                <div class="flex justify-between items-center mb-4">
+
+                <!-- HEADER -->
+                <div class="flex justify-between items-center mb-6">
                     <div>
-                        <h2 class="text-xl md:text-2xl font-semibold text-gray-800">
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-900">
                             Produk Terlaris Minggu Ini
                         </h2>
-                        <span class="block mt-2 h-1 w-16 bg-red-700 rounded"></span>
+                        <div class="w-12 h-[3px] bg-gradient-to-r from-red-600 to-red-400 rounded-full mt-2"></div>
                     </div>
+
                     <a href="{{ route('product', ['sort' => 'terlaris']) }}"
-                        class="text-green-500 hover:text-green-600 font-medium">
+                        class="text-sm text-gray-500 hover:text-red-600 font-medium transition">
                         Lihat Semua →
                     </a>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    @forelse ($products as $product)
-                            <x-product-card :kodeBarang="$product->kode_barang" :name="$product->nama_barang"
-                                :price="number_format($product->harga_jual, 0, ',', '.')" :oldPrice="$product->harga_beli
+                <!-- GRID PRODUK (MAX 2 BARIS) -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+
+                    @forelse ($products->take(10) as $product)
+                            <div
+                                class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+
+                                <!-- BADGE TERLARIS -->
+                                <div class="absolute z-10 m-2">
+                                    <span class="bg-red-600 text-white text-[10px] px-2 py-1 rounded-full shadow">
+                                        Terlaris
+                                    </span>
+                                </div>
+
+                                <!-- PRODUCT CARD -->
+                                <x-product-card :kodeBarang="$product->kode_barang" :name="$product->nama_barang"
+                                    :price="number_format($product->harga_jual, 0, ',', '.')" :oldPrice="$product->harga_beli
                         ? number_format($product->harga_beli, 0, ',', '.')
                         : null" :discount="$product->diskon
                         ? 'Diskon ' . $product->diskon . '%'
-                        : null" :image="$product->foto_produk" :productLink="route('product.detail', $product->kode_barang)" :totalTerjual="$product->total_terjual" />
+                        : null" :image="$product->foto_produk"
+                                    :productLink="route('product.detail', $product->kode_barang)"
+                                    :totalTerjual="$product->total_terjual" />
+
+                            </div>
                     @empty
-                        <p class="text-gray-500">Produk terlaris belum tersedia.</p>
+                        <p class="text-gray-500 col-span-full text-center py-10">
+                            Produk terlaris belum tersedia.
+                        </p>
                     @endforelse
 
                 </div>
+
             </section>
-
-
-
 
             {{-- BANNER PENAWARAN KHUSUS (Thematic) - RE-STYLED --}}
             {{-- SECTION: KATEGORI STRATEGIS (Terlaris, Terbaru, Stok Hampir Habis) --}}
             <section class="mb-12">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    {{-- 1. PRODUK TERLARIS BULAN INI --}}
+                    <!-- 1. TERLARIS -->
                     <div
-                        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 to-blue-900 p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-80 flex flex-col justify-between">
-                        {{-- Background Decor --}}
-                        <div
-                            class="absolute -right-6 -top-6 text-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
-                            <i class="fa-solid fa-fire-flame-curved text-9xl"></i>
-                        </div>
+                        class="group bg-gradient-to-br from-red-50 to-white border border-red-100 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
 
-                        <div class="relative z-10">
-                            <span
-                                class="inline-block rounded-full bg-blue-500/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-blue-300 shadow-sm outline outline-1 outline-blue-400/30">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-100 text-red-600 text-xl shadow-sm">
+                                🔥
+                            </div>
+                            <span class="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">
                                 Trending
                             </span>
-                            <h3 class="mt-4 text-3xl font-extrabold leading-tight text-white">Produk Terlaris <br> Bulan Ini
-                            </h3>
-                            <p class="mt-2 text-sm text-slate-300 leading-relaxed">Produk yang paling banyak dibeli dan
-                                dipercaya oleh pelanggan setia kami.</p>
                         </div>
 
-                        <div class="relative z-10">
-                            <a href="/product?sort=terlaris"
-                                class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-blue-900 transition-colors hover:bg-blue-50">
-                                Lihat Koleksi
-                                <i
-                                    class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
-                            </a>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">
+                                Produk Terlaris
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Produk paling diminati dan banyak dibeli pelanggan.
+                            </p>
                         </div>
+
+                        <a href="/product?sort=terlaris"
+                            class="mt-5 inline-flex items-center justify-between text-sm font-semibold text-red-600 hover:text-red-700 transition">
+                            Lihat Produk
+                            <span class="group-hover:translate-x-1 transition">→</span>
+                        </a>
                     </div>
 
-                    {{-- 2. PRODUK TERBARU --}}
+
+                    <!-- 2. TERBARU -->
                     <div
-                        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 to-teal-700 p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-80 flex flex-col justify-between">
-                        {{-- Background Decor --}}
-                        <div
-                            class="absolute -right-6 -top-6 text-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-                            <i class="fa-solid fa-sparkles text-9xl"></i>
-                        </div>
+                        class="group bg-gradient-to-br from-red-50 via-white to-red-50 border border-red-100 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
 
-                        <div class="relative z-10">
-                            <span
-                                class="inline-block rounded-full bg-emerald-400/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-emerald-200 shadow-sm outline outline-1 outline-emerald-300/30">
-                                Fresh Stock
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-xl bg-red-100 text-red-600 text-xl shadow-sm">
+                                ✨
+                            </div>
+                            <span class="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded-full">
+                                Baru
                             </span>
-                            <h3 class="mt-4 text-3xl font-extrabold leading-tight text-white">Koleksi Produk <br> Terbaru
-                            </h3>
-                            <p class="mt-2 text-sm text-emerald-50/80 leading-relaxed">Update stok bumbu dan sembako segar
-                                yang baru saja tiba di gudang kami.</p>
                         </div>
 
-                        <div class="relative z-10">
-                            <a href="/product?sort=terbaru"
-                                class="inline-flex items-center gap-2 rounded-xl bg-emerald-950 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-emerald-900 border border-emerald-500/50">
-                                Cek Produk Baru
-                                <i class="fa-solid fa-leaf text-xs transition-transform group-hover:rotate-12"></i>
-                            </a>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">
+                                Produk Terbaru
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Stok terbaru dengan kualitas terbaik langsung dari gudang.
+                            </p>
                         </div>
+
+                        <a href="/product?sort=terbaru"
+                            class="mt-5 inline-flex items-center justify-between text-sm font-semibold text-red-600 hover:text-red-700 transition">
+                            Cek Sekarang
+                            <span class="group-hover:translate-x-1 transition">→</span>
+                        </a>
                     </div>
 
-                    {{-- 3. STOK HAMPIR HABIS --}}
+
+                    <!-- 3. STOK MENIPIS -->
                     <div
-                        class="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-700 to-orange-600 p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl h-80 flex flex-col justify-between">
-                        {{-- Background Decor --}}
-                        <div
-                            class="absolute -right-6 -top-6 text-white/10 transition-transform duration-500 group-hover:scale-110">
-                            <i class="fa-solid fa-hourglass-half text-9xl"></i>
-                        </div>
+                        class="group bg-gradient-to-br from-rose-50 to-red-50 border border-rose-100 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
 
-                        <div class="relative z-10">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div
+                                class="w-12 h-12 flex items-center justify-center rounded-xl bg-rose-100 text-red-600 text-xl shadow-sm">
+                                ⏳
+                            </div>
                             <span
-                                class="inline-block animate-pulse rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white shadow-sm outline outline-1 outline-white/40">
-                                Cepat Kehabisan
+                                class="text-xs font-semibold text-red-600 bg-rose-100 px-2 py-1 rounded-full animate-pulse">
+                                Hampir Habis
                             </span>
-                            <h3 class="mt-4 text-3xl font-extrabold leading-tight text-white">Stok Produk <br> Hampir Habis
-                            </h3>
-                            <p class="mt-2 text-sm text-rose-50 leading-relaxed">Segera amankan pesanan Anda! Item ini
-                                sedang dalam permintaan tinggi.</p>
                         </div>
 
-                        <div class="relative z-10">
-                            <a href="/product?filter=low_stock"
-                                class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-bold text-rose-700 transition-all hover:bg-rose-50 shadow-lg shadow-black/10">
-                                Borong Sekarang
-                                <i class="fa-solid fa-cart-shopping text-xs"></i>
-                            </a>
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900">
+                                Stok Menipis
+                            </h3>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Segera pesan sebelum kehabisan stok.
+                            </p>
                         </div>
+
+                        <a href="/product?filter=low_stock"
+                            class="mt-5 inline-flex items-center justify-between text-sm font-semibold text-red-600 hover:text-red-700 transition">
+                            Borong Sekarang
+                            <span class="group-hover:translate-x-1 transition">→</span>
+                        </a>
                     </div>
 
                 </div>

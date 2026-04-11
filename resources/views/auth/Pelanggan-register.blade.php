@@ -99,9 +99,9 @@
                             <select id="kategori_pelanggan_id" name="kategori_pelanggan_id" required
                                     class="w-full bg-white border-none rounded-full py-2 px-5 shadow-sm focus:ring-4 focus:ring-red-200 transition-all text-gray-700 text-sm appearance-none">
                                 <option value="" class="text-gray-400">-- Pilih Kategori Pelanggan --</option>
-                                <option value="1" {{ old('kategori_pelanggan_id') == 1 ? 'selected' : '' }}>Retail</option>
-                                <option value="2" {{ old('kategori_pelanggan_id') == 2 ? 'selected' : '' }}>Grosir</option>
-                                <option value="3" {{ old('kategori_pelanggan_id') == 3 ? 'selected' : '' }}>Distributor</option>
+                                @foreach($kategoriPelanggan as $k)
+                                    <option value="{{ $k->kategori_pelanggan_id }}" {{ old('kategori_pelanggan_id') == $k->kategori_pelanggan_id ? 'selected' : '' }}>{{ $k->kategori_pelanggan }}</option>
+                                @endforeach
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-red-500">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>

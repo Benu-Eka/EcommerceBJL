@@ -15,13 +15,87 @@
                 </svg>
                 Kembali
             </a>
-            <h1 class="text-2xl font-black text-gray-900 mt-3 tracking-tight">Riwayat Pembelian</h1>
-            <p class="text-sm text-gray-400 mt-1">Semua riwayat transaksi Anda</p>
+            <h1 class="text-2xl font-black text-gray-900 mt-3 tracking-tight">Riwayat & Repeat Order</h1>
+            <p class="text-sm text-gray-400 mt-1">Riwayat transaksi selesai & rekomendasi pembelian ulang</p>
         </div>
 
-        {{-- Daftar Riwayat --}}
-        <div class="space-y-4">
+        {{-- ============================================ --}}
+        {{-- SECTION: REKOMENDASI REPEAT ORDER --}}
+        {{-- ============================================ --}}
+        @if($rekomendasiProduk->isNotEmpty())
+        <div class="mb-10">
+            <div class="flex items-center gap-3 mb-5">
+                <div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-extrabold text-gray-900">Repeat Order</h2>
+                    <p class="text-xs text-gray-400">Produk yang sering Anda beli — pesan ulang dengan mudah!</p>
+                </div>
+            </div>
 
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                @foreach($rekomendasiProduk->take(10) as $rekom)
+                    @php
+                        $barang = $rekom['barang'];
+                        $foto = $barang->foto_produk 
+                            ? asset('build/assets/' . $barang->foto_produk) 
+                            : 'https://via.placeholder.com/200x200?text=Produk';
+                    @endphp
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-red-200 transition-all duration-300 overflow-hidden group">
+                        {{-- Gambar --}}
+                        <div class="aspect-square overflow-hidden bg-gray-50">
+                            <img src="{{ $foto }}" alt="{{ $rekom['nama_barang'] }}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        </div>
+
+                        {{-- Info --}}
+                        <div class="p-3">
+                            <h3 class="text-xs font-bold text-gray-800 truncate">{{ $rekom['nama_barang'] }}</h3>
+                            <p class="text-sm font-extrabold text-red-600 mt-1">
+                                Rp {{ number_format($barang->harga_jual ?? 0, 0, ',', '.') }}
+                            </p>
+                            <p class="text-[10px] text-gray-400 mt-1">
+                                Dibeli {{ $rekom['total_order'] }}× ({{ $rekom['total_qty'] }} pcs)
+                            </p>
+
+                            {{-- Tombol Beli Lagi --}}
+                            <form action="{{ route('cart.add') }}" method="POST" class="mt-2">
+                                @csrf
+                                <input type="hidden" name="kode_barang" value="{{ $barang->kode_barang }}">
+                                <input type="hidden" name="jumlah" value="1">
+                                <button type="submit" 
+                                        class="w-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2 rounded-xl transition-colors shadow-sm">
+                                    🔄 Beli Lagi
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+
+        {{-- ============================================ --}}
+        {{-- SECTION: DAFTAR RIWAYAT SELESAI --}}
+        {{-- ============================================ --}}
+        <div class="mb-5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-lg font-extrabold text-gray-900">Transaksi Selesai</h2>
+                    <p class="text-xs text-gray-400">Pesanan yang sudah diterima</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-4">
             @forelse ($orders as $order)
                 @php
                     $firstItem = $order->items->first();
@@ -29,30 +103,6 @@
                     if ($firstItem && $firstItem->barang && $firstItem->barang->foto_produk) {
                         $image = $firstItem->barang->foto_produk;
                     }
-
-                    // Status color mapping
-                    $statusColors = [
-                        'pending'  => 'bg-yellow-50 text-yellow-700',
-                        'dibayar'  => 'bg-blue-50 text-blue-700',
-                        'dikemas'  => 'bg-indigo-50 text-indigo-700',
-                        'dikirim'  => 'bg-purple-50 text-purple-700',
-                        'selesai'  => 'bg-green-50 text-green-700',
-                        'batal'    => 'bg-red-50 text-red-700',
-                        'failed'   => 'bg-red-50 text-red-700',
-                    ];
-
-                    $statusLabels = [
-                        'pending'  => 'Menunggu Pembayaran',
-                        'dibayar'  => 'Sudah Dibayar',
-                        'dikemas'  => 'Sedang Dikemas',
-                        'dikirim'  => 'Sedang Dikirim',
-                        'selesai'  => 'Selesai',
-                        'batal'    => 'Dibatalkan',
-                        'failed'   => 'Gagal',
-                    ];
-
-                    $colorClass = $statusColors[$order->status] ?? 'bg-gray-50 text-gray-700';
-                    $statusLabel = $statusLabels[$order->status] ?? ucfirst($order->status);
                 @endphp
 
                 <a href="{{ route('orders.show', $order->order_id) }}" 
@@ -60,10 +110,9 @@
 
                     {{-- Kiri: Gambar + Info --}}
                     <div class="flex items-center space-x-4 min-w-0">
-                        {{-- Gambar produk pertama --}}
                         <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                             @if($image)
-                                <img src="{{ asset('storage/' . $image) }}" class="w-full h-full object-cover" alt="Produk">
+                                <img src="{{ asset('build/assets/' . $image) }}" class="w-full h-full object-cover" alt="Produk">
                             @else
                                 <div class="w-full h-full flex items-center justify-center">
                                     <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,8 +134,8 @@
                                 {{ $order->order_id }} · {{ $order->created_at->format('d M Y, H:i') }}
                             </p>
 
-                            <span class="inline-block mt-2 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider {{ $colorClass }}">
-                                {{ $statusLabel }}
+                            <span class="inline-block mt-2 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-green-50 text-green-700">
+                                ✅ Selesai
                             </span>
                         </div>
                     </div>
@@ -114,11 +163,10 @@
                         </svg>
                     </div>
                     <h2 class="text-xl font-black text-gray-900">Belum Ada Riwayat</h2>
-                    <p class="text-gray-400 text-sm mt-2">Riwayat pembelian Anda akan muncul di sini.</p>
+                    <p class="text-gray-400 text-sm mt-2">Pesanan yang sudah selesai akan muncul di sini.</p>
                     <a href="{{ route('product') }}" class="inline-block mt-6 text-red-600 font-bold border-b-2 border-red-600 pb-1 hover:text-red-800 transition">Belanja Sekarang</a>
                 </div>
             @endforelse
-
         </div>
     </main>
 

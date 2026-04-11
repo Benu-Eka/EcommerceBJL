@@ -97,7 +97,10 @@ Route::middleware('auth:pelanggan')->group(function () {
     */
     Route::get('/pesanan', [OrderController::class, 'pesanan'])->name('orders.pesanan');
     Route::get('/pesanan/{order_id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/pesanan/{order_id}/confirm', [OrderController::class, 'confirmReceived'])->name('orders.confirmReceived');
+    Route::post('/pesanan/{order_id}/cancel', [OrderController::class, 'cancelOrder'])->name('orders.cancel');
     Route::get('/orders/riwayat', [OrderController::class, 'riwayat'])->name('orders.riwayat');
+    Route::get('/saldo', [OrderController::class, 'saldoPage'])->name('orders.saldo');
 
     /*
     | PROFILE

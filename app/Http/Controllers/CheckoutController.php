@@ -25,22 +25,30 @@ class CheckoutController extends Controller
             return redirect()->route('pelanggan.login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
+        $pelanggan->load('kategoriPelanggan');
         $cartItems = $pelanggan->cartItems()->with('barang')->get();
 
         $subtotal = $cartItems->sum(function ($item) {
             return $item->barang->harga_jual * $item->jumlah;
         });
 
+        // Diskon dinamis berdasarkan kategori pelanggan
+        $kategoriNama = $pelanggan->kategoriPelanggan->kategori_pelanggan ?? '-';
+        $diskonPersen = (float) ($pelanggan->kategoriPelanggan->jumlah_diskon ?? 0);
+
         $biayaPengiriman = 5000;
-        $diskon = $subtotal * 0.10;
+        $diskon = $subtotal * ($diskonPersen / 100);
         $totalBayar = $subtotal - $diskon + $biayaPengiriman;
 
         return view('orders.checkout', compact(
+            'pelanggan',
             'cartItems',
             'subtotal',
             'diskon',
             'biayaPengiriman',
-            'totalBayar'
+            'totalBayar',
+            'kategoriNama',
+            'diskonPersen'
         ));
     }
 
@@ -51,15 +59,19 @@ class CheckoutController extends Controller
 public function process(Request $request)
 {
     $pelanggan = Auth::guard('pelanggan')->user();
+    $pelanggan->load('kategoriPelanggan');
     $cartItems = $pelanggan->cartItems()->with('barang')->get();
 
     if ($cartItems->isEmpty()) {
         return response()->json(['error' => 'Keranjang kosong'], 400);
     }
 
+    // Diskon dinamis berdasarkan kategori pelanggan
+    $diskonPersen = (float) ($pelanggan->kategoriPelanggan->jumlah_diskon ?? 0);
+
     $subtotal = $cartItems->sum(fn($i) => $i->barang->harga_jual * $i->jumlah);
     $biayaPengiriman = 5000;
-    $diskon = $subtotal * 0.10;
+    $diskon = $subtotal * ($diskonPersen / 100);
     $totalBayar = $subtotal - $diskon + $biayaPengiriman;
 
     $order = Order::create([
