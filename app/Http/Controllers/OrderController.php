@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\SaldoTransaction;
+use App\Models\StokBarang;
 use Illuminate\Http\Request;
 use App\Models\SuratJalan;
 use App\Models\SuratJalanDetail;
@@ -38,6 +39,17 @@ class OrderController extends Controller
         return response()->json([
             'error' => 'Keranjang kosong'
         ], 400);
+    }
+
+    // Validasi stok sebelum checkout
+    foreach ($cartItems as $item) {
+        $stok = StokBarang::where('kode_barang', $item->kode_barang)->first();
+        $stokTersedia = $stok ? (int) $stok->jumlah : 0;
+        if ($item->jumlah > $stokTersedia) {
+            return response()->json([
+                'error' => 'Stok ' . ($item->barang->nama_barang ?? $item->kode_barang) . ' tidak mencukupi (tersedia: ' . $stokTersedia . ')'
+            ], 400);
+        }
     }
 
     // Diskon dinamis berdasarkan kategori pelanggan
@@ -79,7 +91,7 @@ class OrderController extends Controller
             return response()->json(['error' => 'Saldo tidak mencukupi'], 400);
         }
 
-        DB::transaction(function () use ($order, $pelanggan, $totalBayar) {
+        DB::transaction(function () use ($order, $pelanggan, $totalBayar, $biayaPengiriman, $diskon) {
             $saldoSebelum = (float) $pelanggan->saldo;
             $saldoSesudah = $saldoSebelum - $totalBayar;
 
@@ -99,16 +111,28 @@ class OrderController extends Controller
             $order->status = 'dibayar';
             $order->save();
 
+            // Kurangi stok barang
+            foreach ($order->items as $item) {
+                $stok = StokBarang::where('kode_barang', $item->kode_barang)->first();
+                if ($stok) {
+                    $stok->jumlah = max(0, $stok->jumlah - $item->quantity);
+                    $stok->tanggal_keluar = now();
+                    $stok->save();
+                }
+            }
+
             // Buat Surat Jalan
+            $adminUser = \App\Models\User::first();
             $sj_id = "SJ-" . now()->format('Ymd') . "-" . strtoupper(Str::random(5));
             SuratJalan::create([
                 'sj_id' => $sj_id,
-                'user_id' => \App\Models\User::first()->user_id ?? '', // Ambil admin pertama
+                'user_id' => $adminUser ? ($adminUser->user_id ?? $adminUser->id) : 'SYSTEM',
                 'pelanggan_id' => $order->pelanggan_id,
+                'nama_penerima' => $order->nama_penerima,
                 'tanggal_surat' => now(),
                 'status' => 'Disetujui',
-                'biaya_pengiriman' => 0, // HARUS ADA
-                'diskon_pelanggan' => 0, // HARUS ADA
+                'biaya_pengiriman' => $biayaPengiriman,
+                'diskon_pelanggan' => $diskon,
                 'subtotal' => $order->total
             ]);
 
@@ -119,7 +143,7 @@ class OrderController extends Controller
                     'kode_barang' => $item->kode_barang,
                     'quantity' => $item->quantity,
                     'harga_satuan' => $item->harga_satuan,
-                    'satuan' => 'pcs' // HARUS ADA
+                    'satuan' => $item->barang->satuan_jual ?? 'pcs'
                 ]);
             }
         });
@@ -184,16 +208,36 @@ public function callback(Request $request)
         $order->status = 'dibayar';
         $order->save();
 
+        // Kurangi stok barang
+        foreach ($order->items as $item) {
+            $stok = StokBarang::where('kode_barang', $item->kode_barang)->first();
+            if ($stok) {
+                $stok->jumlah = max(0, $stok->jumlah - $item->quantity);
+                $stok->tanggal_keluar = now();
+                $stok->save();
+            }
+        }
+
+        // Hitung ulang diskon & ongkir untuk surat jalan
+        $pelangganOrder = $order->pelanggan;
+        $pelangganOrder->load('kategoriPelanggan');
+        $diskonPersen = (float) ($pelangganOrder->kategoriPelanggan->jumlah_diskon ?? 0);
+        $subtotalBarang = $order->items->sum(fn ($i) => $i->harga_satuan * $i->quantity);
+        $diskonNominal = $subtotalBarang * ($diskonPersen / 100);
+        $biayaPengiriman = 5000;
+
+        $adminUser = \App\Models\User::first();
         $sj_id = "SJ-" . now()->format('Ymd') . "-" . strtoupper(Str::random(5));
 
         SuratJalan::create([
             'sj_id' => $sj_id,
-            'user_id' => \App\Models\User::first()->user_id ?? '', // Ambil admin pertama
+            'user_id' => $adminUser ? ($adminUser->user_id ?? $adminUser->id) : 'SYSTEM',
             'pelanggan_id' => $order->pelanggan_id,
+            'nama_penerima' => $order->nama_penerima,
             'tanggal_surat' => now(),
             'status' => 'Disetujui',
-            'biaya_pengiriman' => 0, // HARUS ADA
-            'diskon_pelanggan' => 0, // HARUS ADA
+            'biaya_pengiriman' => $biayaPengiriman,
+            'diskon_pelanggan' => $diskonNominal,
             'subtotal' => $order->total
         ]);
 
@@ -204,7 +248,7 @@ public function callback(Request $request)
                 'kode_barang' => $item->kode_barang,
                 'quantity' => $item->quantity,
                 'harga_satuan' => $item->harga_satuan,
-                'satuan' => 'pcs' // HARUS ADA
+                'satuan' => $item->barang->satuan_jual ?? 'pcs'
             ]);
         }
 

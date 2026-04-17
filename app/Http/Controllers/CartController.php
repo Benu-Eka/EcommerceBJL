@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cart;
+use App\Models\StokBarang;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -93,9 +94,23 @@ public function add(Request $request)
 
     $pelangganId = Auth::guard('pelanggan')->id();
 
+    // Cek ketersediaan stok
+    $stok = StokBarang::where('kode_barang', $request->kode_barang)->first();
+    $stokTersedia = $stok ? (int) $stok->jumlah : 0;
+
     $cart = Cart::where('pelanggan_id', $pelangganId)
                 ->where('kode_barang', $request->kode_barang)
                 ->first();
+
+    $jumlahDiKeranjang = $cart ? (int) $cart->jumlah : 0;
+
+    if ($stokTersedia <= 0) {
+        return back()->with('error', 'Stok barang habis.');
+    }
+
+    if ($jumlahDiKeranjang >= $stokTersedia) {
+        return back()->with('error', 'Jumlah di keranjang sudah mencapai batas stok tersedia ('.$stokTersedia.').');
+    }
 
     if ($cart) {
         $cart->increment('jumlah');

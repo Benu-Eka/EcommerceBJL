@@ -6,32 +6,7 @@
 <div class="min-h-screen bg-white">
     <x-navbar />
 
-    <section class="bg-yellow-50 py-10 px-6 text-center">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Penawaran Voucher Spesial</h2>
-        <p class="text-gray-600 mb-8">Gunakan voucher berikut untuk mendapatkan potongan tambahan di checkout!</p>
 
-        <div class="flex flex-wrap justify-center gap-6">
-            @forelse($vouchers as $voucher)
-                <div class="bg-white border-2 {{ $voucher->persen_diskon ? 'border-yellow-400' : 'border-green-400' }} rounded-lg px-6 py-5 shadow hover:shadow-xl w-64">
-                    <p class="font-bold text-xl mb-1">{{ $voucher->kode }}</p>
-                    <p class="text-gray-600 text-sm mb-4">{{ $voucher->keterangan ?? ($voucher->persen_diskon ? $voucher->persen_diskon . '% off' : 'Diskon') }}</p>
-
-                    @auth('pelanggan')
-                        <button onclick="claimVoucher('{{ $voucher->kode }}')"
-                                class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition duration-300 w-full">
-                            Klaim Voucher
-                        </button>
-                    @else
-                        <a href="{{ route('pelanggan.login.form') }}" class="block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg transition duration-300">
-                            Login untuk Klaim
-                        </a>
-                    @endauth
-                </div>
-            @empty
-                <p class="text-gray-600">Belum ada promo saat ini.</p>
-            @endforelse
-        </div>
-    </section>
 
     <section class="relative bg-gradient-to-b from-red-600 to-orange-500 text-white py-12 px-6 text-center overflow-hidden">
         <div class="absolute inset-0 opacity-20 bg-[url('/images/pattern.svg')] bg-cover bg-center"></div>
@@ -111,29 +86,6 @@
 @endsection
 
 @section('scripts')
-<script>
-function claimVoucher(kode) {
-    fetch("{{ route('voucher.claim') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ kode: kode })
-    })
-    .then(async res => {
-        const data = await res.json();
-        if (!res.ok) throw data;
-        // sukses
-        alert(data.message || 'Voucher berhasil diklaim');
-        // opsional: disable button atau ubah tampilannya
-        location.reload();
-    })
-    .catch(err => {
-        alert(err.error || err.message || 'Terjadi kesalahan saat klaim voucher.');
-    });
-}
-</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {

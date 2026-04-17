@@ -119,7 +119,7 @@ Route::middleware('auth:pelanggan')->group(function () {
     /*
     | VOUCHER
     */
-    Route::post('/voucher/claim', [PromoController::class, 'claim'])->name('voucher.claim');
+
 });
 
 require __DIR__ . '/auth.php';

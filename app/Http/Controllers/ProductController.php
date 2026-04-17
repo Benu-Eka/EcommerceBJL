@@ -16,9 +16,17 @@ class ProductController extends Controller
 
         // 1. Logika Pencarian
         if ($searchTerm) {
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('nama_barang', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('kode_barang', 'like', '%' . $searchTerm . '%');
+            $keywords = array_filter(explode(' ', $searchTerm));
+            $query->where(function ($q) use ($keywords, $searchTerm) {
+                // Tetap cari kode barang secara persis
+                $q->where('kode_barang', 'like', '%' . $searchTerm . '%');
+                
+                // Cari nama barang dengan semua kata kunci (tidak harus urut)
+                $q->orWhere(function($subQ) use ($keywords) {
+                    foreach ($keywords as $word) {
+                        $subQ->where('nama_barang', 'like', '%' . $word . '%');
+                    }
+                });
             });
         }
 
