@@ -5,7 +5,7 @@
             @php
                 $firstItem = $order->items->first();
                 $image = $firstItem && $firstItem->barang && $firstItem->barang->foto_produk
-                    ? asset('build/assets/' . $firstItem->barang->foto_produk)
+                    ? asset('images/foto_produk/' . basename($firstItem->barang->foto_produk))
                     : 'https://via.placeholder.com/80x80?text=Produk';
             @endphp
             <img src="{{$image }}" alt="Gambar Produk" class="w-full h-full object-cover">
@@ -57,37 +57,40 @@
                 {{-- Tombol aksi berdasarkan status --}}
                 <div class="flex flex-col sm:flex-row gap-2">
                     @if(($order['status'] ?? '') === 'pending')
+                        <button type="button" data-order-id="{{ $order->order_id }}" class="btn-pay-pending w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white text-sm font-medium px-5 py-2 rounded-lg transition shadow-md">
+                            Lakukan Pembayaran
+                        </button>
                         <form action="{{ route('orders.cancel', $order->order_id) }}" method="POST"
                               onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')">
                             @csrf
                             <button type="submit" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-5 py-2 rounded-lg transition shadow-md">
-                                ❌ Batalkan Pesanan
+                                Batalkan
                             </button>
                         </form>
                     @elseif(($order['status'] ?? '') === 'dibayar')
                         @if($order['cancel_requested'] ?? 0)
                             <span class="w-full sm:w-auto bg-red-100 text-red-700 text-sm font-medium px-5 py-2 rounded-lg text-center shadow-inner cursor-wait border border-red-200">
-                                ⏳ Menunggu Konfirmasi Batal
+                                Menunggu Konfirmasi Batal
                             </span>
                         @else
                             <form action="{{ route('orders.cancel', $order->order_id) }}" method="POST"
                                   onsubmit="return confirm('Ajukan pembatalan pesanan ini ke admin? Dana akan dikembalikan ke saldo setelah disetujui.')">
                                 @csrf
                                 <button type="submit" class="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white text-sm font-medium px-5 py-2 rounded-lg transition shadow-md">
-                                    ❌ Ajukan Batal & Refund
+                                    Ajukan Batal & Refund
                                 </button>
                             </form>
                         @endif
                     @elseif(($order['status'] ?? '') === 'dikemas')
                         <span class="w-full sm:w-auto bg-orange-100 text-orange-700 text-sm font-medium px-5 py-2 rounded-lg text-center">
-                            📦 Sedang Dikemas
+                            Sedang Dikemas
                         </span>
                     @elseif(($order['status'] ?? '') === 'dikirim')
                         <form action="{{ route('orders.confirmReceived', $order->order_id) }}" method="POST"
                               onsubmit="return confirm('Konfirmasi pesanan sudah diterima?')">
                             @csrf
                             <button type="submit" class="w-full sm:w-auto bg-green-600 text-white text-sm font-medium px-5 py-2 rounded-lg hover:bg-green-700 transition shadow-md">
-                                ✅ Konfirmasi Diterima
+                                Konfirmasi Diterima
                             </button>
                         </form>
                     @elseif(($order['status'] ?? '') === 'selesai')

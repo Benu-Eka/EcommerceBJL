@@ -14,7 +14,7 @@
                     <div id="slides-container" class="flex transition-transform duration-500 ease-in-out h-full">
 
                         <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
-                            style="background-image: url('{{ asset('build/assets/images/tabura-logo.jpg') }}'); background-size: cover; background-position: center;">
+                            style="background-image: url('{{ asset('images/tabura-logo.jpg') }}'); background-size: cover; background-position: center;">
                             <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 rounded-lg"></div>
                             <div class="relative z-10 text-white max-w-lg space-y-3">
                                 <span
@@ -36,7 +36,7 @@
                         </div>
 
                         <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
-                            style="background-image: url('{{ asset('build/assets/images/tim.png') }}'); background-size: cover; background-position: center;">
+                            style="background-image: url('{{ asset('images/tim.png') }}'); background-size: cover; background-position: center;">
                             <div class="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-indigo-900/60 rounded-lg">
                             </div>
                             <div class="relative z-10 text-white max-w-lg space-y-3">
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="w-full flex-shrink-0 bg-gray-100 flex items-end p-6 relative"
-                            style="background-image: url('{{ asset('build/assets/images/cs.png') }}'); background-size: 80% ; background-position:  center;">
+                            style="background-image: url('{{ asset('images/cs.png') }}'); background-size: 80% ; background-position:  center;">
                             <div class="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-indigo-900/60 rounded-lg">
                             </div>
                             <div class="relative z-10 text-white max-w-lg space-y-3">
@@ -93,7 +93,7 @@
                             <a href="/product" class="text-sm text-yellow-700 font-semibold hover:underline">Beli Sekarang
                                 →</a>
                         </div>
-                        <img src="{{ asset('build/assets/images/mie-instan.jpg') }}"
+                        <img src="{{ asset('images/Mie-Instan.png') }}"
                             onerror="this.onerror=null;this.src='https://placehold.co/120x120/FFF/333?text=Mie';"
                             class="w-28 h-28 object-cover rounded-md">
                     </div>
@@ -106,7 +106,7 @@
                             <a href="/product" class="text-sm text-emerald-700 font-semibold hover:underline">Lihat Promo
                                 →</a>
                         </div>
-                        <img src="{{ asset('build/assets/images/tepung.jpg') }}"
+                        <img src="{{ asset('images/Teoung.png') }}"
                             onerror="this.onerror=null;this.src='https://placehold.co/120x120/FFF/333?text=Tepung';"
                             class="w-28 h-28 object-cover rounded-md">
                     </div>

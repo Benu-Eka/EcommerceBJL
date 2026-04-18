@@ -35,7 +35,7 @@
                          alt="{{ $product->nama_barang }}"
                          class="w-full max-w-sm h-auto rounded-lg shadow-md object-contain border">
                 @elseif($image)
-                    <img src="{{ asset('build/assets/' . $image) }}"
+                    <img src="{{ asset('images/foto_produk/' . basename($image)) }}"
                          alt="{{ $product->nama_barang }}"
                          class="w-full max-w-sm h-auto rounded-lg shadow-md object-contain border">
                 @else
@@ -70,13 +70,8 @@
                         {{ $product->satuan_jual ?? '-' }}
                     </div>
                     <div>
-                        <span class="font-semibold">Tipe Harga:</span>
-                        {{ strtoupper($product->tipe_harga_barang) }}
-                    </div>
-                    <div>
-                        <span class="font-semibold">Stok:</span>
-                        {{ $product->jml_barang_per_karton ?? 0 }}
-                        {{ $product->satuan_terkecil }}
+                        <span class="font-semibold">Stok Tersedia:</span>
+                        {{ $product->stok->jumlah ?? 0 }} Karton
                     </div>
                 </div>
 

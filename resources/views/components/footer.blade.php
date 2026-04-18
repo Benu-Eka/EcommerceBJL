@@ -1,7 +1,7 @@
 <footer class="bg-gradient-to-b from-red-900 to-black text-white mt-16 shadow-2xl relative overflow-hidden">
     {{-- Background Siluet Foto --}}
     <div class="absolute inset-0 z-0 opacity-5" 
-     style="background-image: url('{{ asset('build/assets/images/siluet.png') }}'); 
+     style="background-image: url('{{ asset('images/static/siluet.png') }}'); 
             background-size: 1350px; 
             background-repeat: no-repeat;
             background-position: center; 
@@ -16,7 +16,7 @@
             <div class="col-span-2 lg:col-span-2 space-y-4">
                 <div class="flex items-center space-x-2">
                     {{-- Logo: Diinvert agar putih --}}
-                    <img src="{{ asset('build/assets/images/Logo_fanjaya_1.png') }}" alt="Fanjaya Mulia Abadi" class="h-12 mb-1"> <br>
+                    <img src="{{ asset('images/static/Logo_fanjaya_1.png') }}" alt="Fanjaya Mulia Abadi" class="h-12 mb-1"> <br>
                 </div>
                 <p class="text-gray-400 text-sm max-w-sm">
                     Pusat grosir bahan baku dan produk berkualitas tinggi. Melayani kebutuhan bisnis Anda dengan integritas dan profesionalisme.

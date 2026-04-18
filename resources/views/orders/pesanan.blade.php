@@ -182,7 +182,71 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Aktifkan tab yang sudah ditandai active oleh server
     const activeTab = document.querySelector('.tab-btn.active');
-    activate(activeTab ?? tabs[0]);
+    if(activeTab) {
+        activate(activeTab);
+    } else if (tabs.length > 0) {
+        activate(tabs[0]);
+    }
+});
+</script>
+
+<script src="https://app.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const payBtns = document.querySelectorAll('.btn-pay-pending');
+    payBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const orderId = this.dataset.orderId;
+            const originalText = this.innerHTML;
+            this.innerHTML = "Memproses...";
+            this.disabled = true;
+
+            fetch(`/orders/pay-pending/${orderId}`, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                    return;
+                }
+                
+                if (data.snap_token) {
+                    snap.pay(data.snap_token, {
+                        onSuccess: function () {
+                            window.location.href = `/orders/success/${orderId}`;
+                        },
+                        onPending: function () {
+                            window.location.href = "?tab=belum-bayar";
+                        },
+                        onError: function () {
+                            window.location.href = "?tab=dibatalkan";
+                        },
+                        onClose: function () {
+                            btn.innerHTML = originalText;
+                            btn.disabled = false;
+                        }
+                    });
+                } else {
+                    alert("Token pembayaran tidak valid.");
+                    this.innerHTML = originalText;
+                    this.disabled = false;
+                }
+            })
+            .catch(err => {
+                alert("Terjadi kesalahan sistem: " + err);
+                this.innerHTML = originalText;
+                this.disabled = false;
+            });
+        });
+    });
 });
 </script>
 

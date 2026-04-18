@@ -75,7 +75,7 @@
 
                                     <td class="py-6 px-4">
                                         <div class="flex items-center gap-4">
-                                            <img src="{{ asset('build/assets/' . $foto) }}"
+                                            <img src="{{ asset('images/foto_produk/' . basename($foto)) }}"
                                                  class="w-16 h-16 object-cover rounded-xl border">
                                             <div>
                                                 <h3 class="font-bold text-sm text-gray-900">

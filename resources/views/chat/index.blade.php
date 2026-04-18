@@ -21,7 +21,7 @@
                     </a>
                     <div class="flex items-center space-x-3">
                         <div class="relative">
-                            <img src="{{ asset('build/assets/images/Logo_fanjaya_1.png') }}" class="w-12 h-10 object-contain bg-white rounded-lg p-1" alt="CS">
+                            <img src="{{ asset('images/static/Logo_fanjaya_1.png') }}" class="w-12 h-10 object-contain bg-white rounded-lg p-1" alt="CS">
                             <span class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-red-800 rounded-full animate-pulse"></span>
                         </div>
                         <div>

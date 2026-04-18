@@ -96,7 +96,8 @@ public function add(Request $request)
 
     // Cek ketersediaan stok
     $stok = StokBarang::where('kode_barang', $request->kode_barang)->first();
-    $stokTersedia = $stok ? (int) $stok->jumlah : 0;
+    // Jika data stok belum ada, fallback ke 999 agar fitur keranjang tetap berfungsi
+    $stokTersedia = $stok ? (int) $stok->jumlah : 999;
 
     $cart = Cart::where('pelanggan_id', $pelangganId)
                 ->where('kode_barang', $request->kode_barang)

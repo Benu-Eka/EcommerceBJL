@@ -62,6 +62,8 @@ class OrderController extends Controller
 
     $order_id = "ORD-" . now()->format('Ymd') . "-" . strtoupper(Str::random(6));
 
+    $midtransOrderId = $order_id . '-' . time();
+
     $order = Order::create([
         'order_id' => $order_id,
         'pelanggan_id' => $pelanggan->pelanggan_id,
@@ -70,6 +72,7 @@ class OrderController extends Controller
         'telepon' => $request->telepon,
         'total' => $totalBayar,
         'status' => 'pending',
+        'midtrans_order_id' => $midtransOrderId,
     ]);
 
     foreach ($cartItems as $item) {
@@ -164,7 +167,7 @@ class OrderController extends Controller
     try {
         $params = [
             'transaction_details' => [
-                'order_id' => $order_id,
+                'order_id' => $midtransOrderId,
                 'gross_amount' => $totalBayar, // HARUS INT & > 0
             ],
             'customer_details' => [
@@ -193,7 +196,8 @@ public function callback(Request $request)
 {
     Log::info("MIDTRANS CALLBACK", $request->all());
 
-    $order = Order::where('order_id', $request->order_id)
+    $order = Order::where('midtrans_order_id', $request->order_id)
+        ->orWhere('order_id', $request->order_id)
         ->with('items')
         ->first();
 
@@ -352,9 +356,14 @@ protected function generateMidtransSnapToken($order)
         Config::$isSanitized = true;
         Config::$isProduction = false; // set true jika production
 
+        // Karena ini pembayaran ulang, perbarui token referensi ke midtrans agar terhindar dari Error 'sudah digunakan'
+        $midtransOrderId = $order->order_id . '-' . time();
+        $order->midtrans_order_id = $midtransOrderId;
+        $order->save();
+
         // Detail transaksi
         $transaction_details = [
-            'order_id' => $order->order_id,
+            'order_id' => $midtransOrderId,
             'gross_amount' => $order->total,
         ];
 

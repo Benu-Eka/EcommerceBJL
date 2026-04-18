@@ -41,7 +41,7 @@
                     @php
                         $barang = $rekom['barang'];
                         $foto = $barang->foto_produk 
-                            ? asset('build/assets/' . $barang->foto_produk) 
+                            ? asset('images/foto_produk/' . basename($barang->foto_produk)) 
                             : 'https://via.placeholder.com/200x200?text=Produk';
                     @endphp
                     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg hover:border-red-200 transition-all duration-300 overflow-hidden group">
@@ -112,7 +112,7 @@
                     <div class="flex items-center space-x-4 min-w-0">
                         <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                             @if($image)
-                                <img src="{{ asset('build/assets/' . $image) }}" class="w-full h-full object-cover" alt="Produk">
+                                <img src="{{ asset('images/foto_produk/' . basename($image)) }}" class="w-full h-full object-cover" alt="Produk">
                             @else
                                 <div class="w-full h-full flex items-center justify-center">
                                     <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

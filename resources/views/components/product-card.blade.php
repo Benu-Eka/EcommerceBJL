@@ -24,12 +24,12 @@
     {{-- 🖼️ Gambar Produk --}}
     <div class="p-4 flex flex-col items-center">
         <div class="h-36 w-full flex justify-center items-center mb-4 overflow-hidden">
-            @if(Str::startsWith($image, ['http', 'https', 'data:', '/storage', 'build']))
+            @if(Str::startsWith($image, ['http', 'https', 'data:']))
                 <img src="{{ $image }}" 
                      alt="{{ $name }}" 
                      class="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105">
             @else
-                <img src="{{ asset('build/assets/' . $image) }}" 
+                <img src="{{ asset('images/foto_produk/' . basename($image)) }}" 
                      alt="{{ $name }}" 
                      onerror="this.onerror=null;this.src='https://placehold.co/150x150?text=No+Image';"
                      class="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105">
@@ -56,9 +56,7 @@
             {{-- 💰 Harga --}}
             <div class="flex justify-center items-end space-x-2 mb-2">
                 <span class="text-lg font-bold text-green-600">Rp {{ $price }}</span>
-                @if($oldPrice)
-                    <span class="text-xs text-gray-400 line-through">Rp {{ $oldPrice }}</span>
-                @endif
+                <span class="text-xs text-gray-400">/ Karton</span>
             </div>
 
             {{-- 🛒 Tombol Tambah ke Keranjang --}}

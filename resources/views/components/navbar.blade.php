@@ -12,7 +12,7 @@
         
         {{-- Pola Batik Subtle --}}
         <div class="absolute inset-0 opacity-5 pointer-events-none" 
-             style="background-image: url('{{ asset('build/assets/images/batik.png') }}'); background-size: 500px;">
+             style="background-image: url('{{ asset('images/static/batik.png') }}'); background-size: 500px;">
         </div>
 
         <div class="container mx-auto px-4 relative z-10">
@@ -45,7 +45,7 @@
                 {{-- 2. TENGAH: Logo (Tetap di tengah di semua layar) --}}
                 <div class="flex-shrink-0 z-20">
                     <a href="/" class="block bg-white p-1.5 md:p-2 rounded-xl shadow-lg transform hover:scale-105 transition duration-300">
-                        <img src="{{ asset('build/assets/images/Logo_fanjaya_1.png') }}" alt="Logo" class="h-10 md:h-14 w-auto">
+                        <img src="{{ asset('images/static/Logo_fanjaya_1.png') }}" alt="Logo" class="h-10 md:h-14 w-auto">
                     </a>
                 </div>
 
